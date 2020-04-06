@@ -28,7 +28,7 @@ def prueba_conexion(jugador):
     '''
         SOLO USAR PARA TESTING
     '''
-    print("Se conectó el", jugador + "s")
+    print("Se conectó", jugador + "s")
     return "Descifraste el mensaje secreto"
 
 
