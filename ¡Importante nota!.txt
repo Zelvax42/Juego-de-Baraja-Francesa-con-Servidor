@@ -1,0 +1,2 @@
+Amigos miembros de esta fiel feligresia, les invito a que no hagan commit y push por cada variable que declaren. 
+Muchas gracias.
