@@ -31,6 +31,7 @@ def despliega_menu():
     print("0.- Salir")
     o = input("\nOpción:> ")
 
+    # agregar número si agregas opción nueva
     opciones = ['1', '2', '3', '4', '5', '0']
     if o in opciones:
         return int(o)
@@ -54,6 +55,18 @@ def desplegar_mano(jugador, mano):
             print(str(key) + " " + str(val))
 
 
+def desplegar_jugadores(lista_jugadores):
+    '''
+        imprime todos los jugadores de una lista
+        recibe: una lista de string, uso: lista_jugadores
+    '''
+    print("Jugadores:", str(len(lista_jugadores)) + "\n")
+    i = 1
+    for jugador in lista_jugadores:
+        print("Jugador", str(i) + ":", jugador["nombre"])
+        i += 1
+
+
 def main(jugador, ip, puerto):
     print("\n== JUEGO DE BARAJA FRANCESA ==\n")
     print("Iniciando...\n")
@@ -72,7 +85,8 @@ def main(jugador, ip, puerto):
                 mano = proxy.pedir_mano(jugador)
                 desplegar_mano(jugador, mano)
             elif opcion == 2:
-                pass
+                lista_jugadores = proxy.mostrar_jugadores()
+                desplegar_jugadores(lista_jugadores)
             elif opcion == 3:
                 pass
             elif opcion == 4:
