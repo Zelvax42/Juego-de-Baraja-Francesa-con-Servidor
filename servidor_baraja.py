@@ -46,7 +46,7 @@ def leer_pkl():
     '''
         Lee un archivo .pkl y devuelve una lista de objetos
         regresa: lista[0] = baraja
-                 lista[1] = mano
+                 lista[1] = mano (mano de cada jugador)
     '''
     try:
         lista = pickle.load(open("pickle.pkl", "rb"))
@@ -62,15 +62,24 @@ def pedir_mano(jugador):
         recibe: un nombre de jugador, uso: "emilio"
         regresa: una lista de cartas
     '''
-    lista = leer_pkl() # Se utiliza un pickle para poder usar la información del servidor
-    baraja = lista[0]
-    mano = lista[1]
-    tarjetas.genera_jugador(jugador, baraja)
-    lista_cartas = baraja.genera_mano(mano, jugador)
+    lista = leer_pkl()  # Se utiliza un pickle para poder usar la información del servidor
+    baraja = lista[0]   # objeto baraja que alberga jugadores y cartas
+    mano = lista[1]     # mano del jugador
+    tarjetas.genera_jugador(jugador, baraja) # Guarda un jugador en baraja
+    lista_cartas = baraja.genera_mano(mano, jugador) # la lista de 52 cartas
     print(jugador, "Solicitó pedir mano")
     guardar_pickle(baraja, mano) # Se guardan los valores sobreescritos
     return lista_cartas
 
+
+def mostrar_jugadores():
+    '''
+        regresa una lista de jugadores de un objeto baraja
+        recibe: objeto baraja, uso: baraja
+        regresa: lista_jugadores
+    '''
+    lista_jugadores = leer_pkl()[0].lista_jugadores # baraja.lista_jugadores
+    return lista_jugadores
 
 def prueba_conexion(jugador):
     '''
@@ -89,6 +98,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
 
     server.register_function(prueba_conexion)
     server.register_function(pedir_mano)
+    server.register_function(mostrar_jugadores)
 
     # Iniciando servidor
     print("\nIniciando servidor...\n")
