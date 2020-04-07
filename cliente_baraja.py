@@ -40,14 +40,13 @@ def despliega_menu():
         return despliega_menu()
 
 
-def desplegar_mano(jugador, mano):
+def mostrar_mano(jugador, mano):
     '''
         muestra la mano de un jugador
         recibe: nombre del jugador, uso: "Emilio"
-        recibe: número de cartas del jugador, uso: 5
+        recibe: diccionario de cartas del jugador, uso: mano
     '''
     # PLIS ALGUIEN HAGA QUE SE IMPRIME BONEETO ESTO POR FAVOR
-    palabras = ('valor ', 'figura ')
     print(jugador)
     print("===================")
     for carta in mano:
@@ -55,17 +54,36 @@ def desplegar_mano(jugador, mano):
             print(str(key) + " " + str(val))
 
 
-def desplegar_jugadores(lista_jugadores):
+def mostrar_jugadores(lista_jugadores):
     '''
         imprime todos los jugadores de una lista
-        recibe: una lista de string, uso: lista_jugadores
+        recibe: una lista de diccionarios, uso: lista_jugadores
     '''
     print("Jugadores:", str(len(lista_jugadores)) + "\n")
     i = 1
     for jugador in lista_jugadores:
-        print("Jugador", str(i) + ":", jugador["nombre"])
+        # jugador["nombre"]
+        # jugador["mano"]
+        # jugador["puntuacion"]
+        print("Jugador", str(i) + ":", jugador["nombre"]) # jugador es un diccionario
         i += 1
 
+def mostrar_manos_todos(lista_jugadores):
+    '''
+        imprime las manos de todos los jugadores
+        recibe: una lista de diccionarios, uso: lista_jugadores
+    '''
+    for jugador in lista_jugadores:
+        # jugador["nombre"]
+        # jugador["mano"]
+        # jugador["puntuacion"]
+        nombre = jugador["nombre"]
+        mano = jugador["mano"]
+        mostrar_mano(nombre, mano)
+        print("\n")
+        ###############################
+        # AQUÍ DEBE CALCULAR QUIÉN GANÓ
+        # E IMPRIMIRLO
 
 def main(jugador, ip, puerto):
     print("\n== JUEGO DE BARAJA FRANCESA ==\n")
@@ -83,12 +101,13 @@ def main(jugador, ip, puerto):
                 pass
             elif opcion == 1:
                 mano = proxy.pedir_mano(jugador)
-                desplegar_mano(jugador, mano)
+                mostrar_mano(jugador, mano)
             elif opcion == 2:
                 lista_jugadores = proxy.mostrar_jugadores()
-                desplegar_jugadores(lista_jugadores)
+                mostrar_jugadores(lista_jugadores)
             elif opcion == 3:
-                pass
+                lista_jugadores = proxy.mostrar_jugadores()
+                mostrar_manos_todos(lista_jugadores)
             elif opcion == 4:
                 pass
             elif opcion == 5:
