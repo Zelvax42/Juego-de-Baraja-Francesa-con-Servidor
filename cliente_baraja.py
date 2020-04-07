@@ -17,6 +17,7 @@ import argparse
 import servidor_baraja
 import copy
 import time
+import tarjetas
 
 
 def despliega_menu():
@@ -30,7 +31,7 @@ def despliega_menu():
     print("0.- Salir")
     o = input("\nOpción:> ")
 
-    opciones = ['1','2','3','4','5','0']
+    opciones = ['1', '2', '3', '4', '5', '0']
     if o in opciones:
         return int(o)
     else:
@@ -38,21 +39,38 @@ def despliega_menu():
         return despliega_menu()
 
 
+def desplegar_mano(jugador, mano):
+    '''
+        muestra la mano de un jugador
+        recibe: nombre del jugador, uso: "Emilio"
+        recibe: número de cartas del jugador, uso: 5
+    '''
+    # PLIS ALGUIEN HAGA QUE SE IMPRIME BONEETO ESTO POR FAVOR
+    palabras = ('valor ', 'figura ')
+    print(jugador)
+    print("===================")
+    for carta in mano:
+        for key, val in carta.items():
+            print(str(key) + " " + str(val))
+
+
 def main(jugador, ip, puerto):
     print("\n== JUEGO DE BARAJA FRANCESA ==\n")
     print("Iniciando...\n")
 
-    try:        
-        proxy = xmlrpc.client.ServerProxy("http://" + str(ip) + ":" + str(puerto))
-        #print(proxy.prueba_conexion(jugador))  # SOLO USAR PARA TESTING
-        opcion = 10930193413
+    try:
+        proxy = xmlrpc.client.ServerProxy(
+            "http://" + str(ip) + ":" + str(puerto))
+        # print(proxy.prueba_conexion(jugador))  # SOLO USAR PARA TESTING
+        opcion = 666
         while opcion != 0:
             opcion = despliega_menu()
             print("\n")
             if opcion == 0:
                 pass
             elif opcion == 1:
-                pass
+                mano = proxy.pedir_mano(jugador)
+                desplegar_mano(jugador, mano)
             elif opcion == 2:
                 pass
             elif opcion == 3:
