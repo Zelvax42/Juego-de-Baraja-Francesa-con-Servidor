@@ -65,10 +65,10 @@ def pedir_mano(jugador):
     lista = leer_pkl()  # Se utiliza un pickle para poder usar la información del servidor
     baraja = lista[0]   # objeto baraja que alberga jugadores y cartas
     mano = lista[1]     # mano del jugador
-    tarjetas.genera_jugador(jugador, baraja) # Guarda un jugador en baraja
-    lista_cartas = baraja.genera_mano(mano, jugador) # la lista de 52 cartas
+    tarjetas.genera_jugador(jugador, baraja)  # Guarda un jugador en baraja
+    lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de 52 cartas
     print(jugador, "Solicitó pedir mano")
-    guardar_pickle(baraja, mano) # Se guardan los valores sobreescritos
+    guardar_pickle(baraja, mano)  # Se guardan los valores sobreescritos
     return lista_cartas
 
 
@@ -78,8 +78,9 @@ def mostrar_jugadores():
         recibe: objeto baraja, uso: baraja
         regresa: lista_jugadores
     '''
-    lista_jugadores = leer_pkl()[0].lista_jugadores # baraja.lista_jugadores
+    lista_jugadores = leer_pkl()[0].lista_jugadores  # baraja.lista_jugadores
     return lista_jugadores
+
 
 def prueba_conexion(jugador):
     '''
