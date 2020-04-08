@@ -46,7 +46,7 @@ def leer_pkl():
     '''
         Lee un archivo .pkl y devuelve una lista de objetos
         regresa: lista[0] = baraja
-                 lista[1] = mano (mano de cada jugador)
+                 lista[1] = mano (tamaño de mano)
     '''
     try:
         lista = pickle.load(open("pickle.pkl", "rb"))
