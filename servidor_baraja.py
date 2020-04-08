@@ -66,7 +66,7 @@ def pedir_mano(jugador):
     baraja = lista[0]   # objeto baraja que alberga jugadores y cartas
     mano = lista[1]     # tamaño de mano
     tarjetas.genera_jugador(jugador, baraja)  # Guarda un jugador en baraja
-    lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de 52 cartas
+    lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de cartas del jugador
 
     print(jugador, "Solicitó pedir mano")
 
