@@ -67,8 +67,11 @@ def pedir_mano(jugador):
     mano = lista[1]     # mano del jugador
     tarjetas.genera_jugador(jugador, baraja)  # Guarda un jugador en baraja
     lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de 52 cartas
+
     print(jugador, "Solicitó pedir mano")
+
     guardar_pickle(baraja, mano)  # Se guardan los valores sobreescritos
+
     return lista_cartas
 
 
@@ -103,12 +106,15 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
 
     # Iniciando servidor
     print("\nIniciando servidor...\n")
+    print("IP:", ip)
+    print("Puerto.", puerto)
     try:
         print("===========================\n")
         print("Información del servidor: ")
         print("- Servidor iniciado")
         print("- Dirección IP:", ip)
         print("- Puerto:", puerto)
+        print("- Tamaño de mano:", mano)
         print("\n===========================")
         print("\nUsa Control-C para salir.")
         server.serve_forever()

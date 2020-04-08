@@ -20,6 +20,15 @@ import time
 import tarjetas
 
 
+def mostrar_bienvenida(jugador, ip, puerto):
+    '''
+        Imprime el mensaje de bienvenida
+    '''
+    print("Bienvenido", jugador)
+    print("Dirección IP:", ip)
+    print("Puerto:", puerto)
+
+
 def despliega_menu():
     print("--------------------------\n")
     print("** MENU **\n")
@@ -46,7 +55,7 @@ def mostrar_mano(jugador, mano):
         recibe: nombre del jugador, uso: "Emilio"
         recibe: diccionario de cartas del jugador, uso: mano
     '''
-    # PLIS ALGUIEN HAGA QUE SE IMPRIME BONEETO ESTO POR FAVOR
+    # PLIS ALGUIEN HAGA QUE SE IMPRIMA BONEETO ESTO POR FAVOR
     print(jugador)
     print("===================")
     for carta in mano:
@@ -65,8 +74,10 @@ def mostrar_jugadores(lista_jugadores):
         # jugador["nombre"]
         # jugador["mano"]
         # jugador["puntuacion"]
-        print("Jugador", str(i) + ":", jugador["nombre"]) # jugador es un diccionario
+        # jugador es un diccionario
+        print("Jugador", str(i) + ":", jugador["nombre"])
         i += 1
+
 
 def mostrar_manos_todos(lista_jugadores):
     '''
@@ -77,6 +88,7 @@ def mostrar_manos_todos(lista_jugadores):
         # jugador["nombre"]
         # jugador["mano"]
         # jugador["puntuacion"]
+        # jugador es un diccionario
         nombre = jugador["nombre"]
         mano = jugador["mano"]
         mostrar_mano(nombre, mano)
@@ -85,6 +97,7 @@ def mostrar_manos_todos(lista_jugadores):
         # AQUÍ DEBE CALCULAR QUIÉN GANÓ
         # E IMPRIMIRLO
 
+
 def main(jugador, ip, puerto):
     print("\n== JUEGO DE BARAJA FRANCESA ==\n")
     print("Iniciando...\n")
@@ -92,6 +105,7 @@ def main(jugador, ip, puerto):
     try:
         proxy = xmlrpc.client.ServerProxy(
             "http://" + str(ip) + ":" + str(puerto))
+        mostrar_bienvenida(jugador, ip, puerto)
         # print(proxy.prueba_conexion(jugador))  # SOLO USAR PARA TESTING
         opcion = 666
         while opcion != 0:
