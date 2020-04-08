@@ -64,7 +64,7 @@ def pedir_mano(jugador):
     '''
     lista = leer_pkl()  # Se utiliza un pickle para poder usar la información del servidor
     baraja = lista[0]   # objeto baraja que alberga jugadores y cartas
-    mano = lista[1]     # mano del jugador
+    mano = lista[1]     # tamaño de mano
     tarjetas.genera_jugador(jugador, baraja)  # Guarda un jugador en baraja
     lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de 52 cartas
 
