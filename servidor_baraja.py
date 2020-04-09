@@ -77,7 +77,7 @@ def genera_mano(nombre_jugador):
         recibe: un nombre de jugador, uso: "emilio"
         regresa: una lista de cartas
     '''
-    if dar_mano():
+    if dar_mano():  # se verifica si es posible dar cartas aún
         lista = leer_pkl()  # Se utiliza un pickle para poder usar la información del servidor
         baraja = lista[0]   # objeto baraja que alberga jugadores y cartas
         mano = lista[1]     # tamaño de mano
@@ -85,9 +85,12 @@ def genera_mano(nombre_jugador):
         if existe_jugador(nombre_jugador) == False:
             # Guarda un jugador en baraja
             tarjetas.genera_jugador(nombre_jugador, baraja)
+            # la lista de cartas del jugador
+            baraja.genera_mano(mano, nombre_jugador)
 
-        # la lista de cartas del jugador
-        baraja.genera_mano(mano, nombre_jugador)
+        else:  # esto significa que ya debe tener una mano
+            # Cambiamos su mano por otra
+            baraja.cambia_mano(mano, nombre_jugador)
 
         print(nombre_jugador, "solicitó pedir mano")
         print("Quedan", len(baraja.lista_cartas), "cartas")
@@ -155,6 +158,17 @@ def dar_mano():
         return False
 
 
+def salir(nombre_jugador):
+    baraja = leer_pkl()[0]
+    mano = leer_pkl()[1]  # tamaño de mano
+    # se retorna las cartas a la baraja
+    baraja.regresa_mano(mano, nombre_jugador)
+
+    print("El jugador(a):", nombre_jugador, "se ha desconectadx")
+    print("Quedan", len(baraja.lista_cartas), "cartas")
+    guardar_pickle(baraja, mano)
+
+
 def prueba_conexion(jugador):
     '''
         SOLO USAR PARA TESTING
@@ -174,6 +188,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
     server.register_function(mostrar_jugadores)
     server.register_function(obten_mano)
     server.register_function(obten_mano_todos)
+    server.register_function(salir)
 
     # Iniciando servidor
     print("\nIniciando servidor...\n")
@@ -185,7 +200,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
         print("- Puerto:", puerto)
         print("- Tamaño de mano:", mano)
         print("\n===========================")
-        print("\nUsa Control-C para salir.")
+        print("\nUsa Control-C para salir.\n")
         server.serve_forever()
 
     except KeyboardInterrupt:
