@@ -22,8 +22,8 @@ class Jugador:
             recibe: un objeto baraja
         '''
         cartas_mano = []
-        print("\nJugador: " + self.nombre)
-        print("--------------------\n")
+        #print("\nJugador: " + self.nombre)
+        #print("--------------------\n")
         for carta in self.mano:
             cartas = f"{carta.display(baraja.diccionario_cartas)}"
             #print(cartas)
