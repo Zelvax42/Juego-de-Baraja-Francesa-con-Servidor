@@ -15,8 +15,6 @@
 import xmlrpc.client
 import argparse
 import servidor_baraja
-import copy
-import time
 import tarjetas
 
 
@@ -49,51 +47,40 @@ def despliega_menu():
         return despliega_menu()
 
 
-def mostrar_mano(jugador,mano):
+def mostrar_mano(jugador, mano):
     '''
         muestra la mano de un jugador
         recibe: nombre del jugador, uso: "Emilio"
         recibe: diccionario de cartas del jugador, uso: mano
     '''
-    # PLIS ALGUIEN HAGA QUE SE IMPRIMA BONEETO ESTO POR FAVOR
     print(jugador)
     print("===================")
 
     for carta in mano:
         print(carta)
 
+
 def mostrar_jugadores(lista_jugadores):
     '''
         imprime todos los jugadores de una lista
-        recibe: una lista de diccionarios, uso: lista_jugadores
+        recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
     '''
     print("Jugadores:", str(len(lista_jugadores)) + "\n")
     i = 1
     for jugador in lista_jugadores:
-        # jugador["nombre"]
-        # jugador["mano"]
-        # jugador["puntuacion"]
-        # jugador es un diccionario
-        print("Jugador ", str(i) + ":", jugador)
+        print("Jugador", str(i) + ":", jugador)
         i += 1
 
 
-def mostrar_manos_todos(lista_nombres_jugadores,proxy):
+def mostrar_manos_todos(lista_nombres_jugadores):
     '''
         imprime las manos de todos los jugadores
-        recibe: una lista de diccionarios, uso: lista_jugadores
+        recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
     '''
     for jugador in lista_nombres_jugadores:
-        # jugador["nombre"]
-        # jugador["mano"]
-        # jugador["puntuacion"]
-        # jugador es un diccionario
-        #nombre = jugador["nombre"]
-        #mano = jugador["mano"]
-        #mostrar_mano(nombre, mano)
         print("\n")
         mano = proxy.obten_mano(jugador)
-        mostrar_mano(jugador,mano)
+        mostrar_mano(jugador, mano)
         ###############################
         # AQUÍ DEBE CALCULAR QUIÉN GANÓ
         # E IMPRIMIRLO
@@ -112,28 +99,27 @@ def main(jugador, ip, puerto):
         while opcion != 0:
             opcion = despliega_menu()
             print("\n")
-            if opcion == 0:
-                pass
-            else:
+            if opcion == 1:
+                mano = proxy.genera_mano(jugador)
+                mostrar_mano(jugador, mano)
+            elif opcion == 2:
                 lista_nombres_jugadores = proxy.mostrar_jugadores()
-                if opcion == 1:
-                    proxy.pedir_mano(jugador)
-                    mano = proxy.obten_mano(jugador)
-                    mostrar_mano(jugador,mano)
-                elif opcion == 2:
-                    if len(lista_nombres_jugadores) > 0:
-                        mostrar_jugadores(lista_nombres_jugadores)
-                    else:
-                        print("No hay jugadores")
-                elif opcion == 3:
-                    if len(lista_nombres_jugadores) > 0:
-                        mostrar_manos_todos(lista_nombres_jugadores,proxy)
-                    else:
-                        print("No hay jugadores")
-                elif opcion == 4:
-                    pass
-                elif opcion == 5:
-                    pass
+
+                if len(lista_nombres_jugadores) > 0:
+                    mostrar_jugadores(lista_nombres_jugadores)
+                else:
+                    print("No hay jugadores")
+            elif opcion == 3:
+                lista_nombres_jugadores = proxy.mostrar_jugadores()
+
+                if len(lista_nombres_jugadores) > 0:
+                    mostrar_manos_todos(lista_nombres_jugadores)
+                else:
+                    print("No hay jugadores")
+            elif opcion == 4:
+                pass
+            elif opcion == 5:
+                pass
         print("\n¡Gracias por jugar!\n")
     except ConnectionError:
         print("Error de conexión con el servidor.\n")
