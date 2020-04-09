@@ -81,6 +81,7 @@ def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos):
     if len(lista_nombres_jugadores) > 0:
         for jugador, mano in zip(lista_nombres_jugadores, lista_cartas_todos):
             mostrar_mano(jugador, mano)
+            print("\n")
 
         # función chila que diga quién ganó aki
     else:
@@ -97,11 +98,13 @@ def main(jugador, ip, puerto):
         mostrar_bienvenida(jugador, ip, puerto)
         # print(proxy.prueba_conexion(jugador))  # SOLO USAR PARA TESTING
         opcion = 666
+        tiene_mano = False
         while opcion != 0:
             opcion = despliega_menu()
             print("\n")
             if opcion == 1:
                 mano = proxy.genera_mano(jugador)
+                tiene_mano = True
                 if mano != 0:
                     mostrar_mano(jugador, mano)
                 else:
@@ -123,11 +126,17 @@ def main(jugador, ip, puerto):
                 pass
             elif opcion == 5:
                 pass
+        if tiene_mano == True:  # ya tienes una mano
+            proxy.salir(jugador)
         print("\n¡Gracias por jugar!\n")
     except ConnectionError:
         print("Error de conexión con el servidor.\n")
     except KeyboardInterrupt:
+        if tiene_mano == True:  # ya tienes una mano
+            proxy.salir(jugador)
         print("Cancelado por el usuario")
+    except:
+        print("según esto hay un error, al aplicar proxy.salir(), no sé xq y parece no afectar en nada\n")
 
 
 if __name__ == "__main__":
