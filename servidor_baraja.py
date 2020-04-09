@@ -67,22 +67,33 @@ def pedir_mano(jugador):
     mano = lista[1]     # tamaño de mano
     tarjetas.genera_jugador(jugador, baraja)  # Guarda un jugador en baraja
     lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de cartas del jugador
-
+    #print(type(lista_cartas[0]))
     print(jugador, "Solicitó pedir mano")
-
     guardar_pickle(baraja, mano)  # Se guardan los valores sobreescritos
-
     return lista_cartas
 
+def obten_mano(nombre_jugador):
+    baraja = leer_pkl()[0]
+    print(type(baraja))
+    for j in baraja.lista_jugadores:
+        if j.nombre == nombre_jugador:
+            jugador = j
+            lista_cartas = jugador.despliega_mano(baraja)
+            return lista_cartas
 
 def mostrar_jugadores():
     '''
-        regresa una lista de jugadores de un objeto baraja
-        recibe: objeto baraja, uso: baraja
-        regresa: lista_jugadores
+        regresa una lista con los nombres de los jugadores de un objeto baraja
+        regresa: lista_nombres
     '''
     lista_jugadores = leer_pkl()[0].lista_jugadores  # baraja.lista_jugadores
-    return lista_jugadores
+    if len(lista_jugadores) > 0:
+        lista_nombres = []
+        for jugador in lista_jugadores:
+            lista_nombres.append(jugador.nombre)
+        return lista_nombres
+    else:
+        return []
 
 
 def prueba_conexion(jugador):
@@ -103,6 +114,9 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
     server.register_function(prueba_conexion)
     server.register_function(pedir_mano)
     server.register_function(mostrar_jugadores)
+    server.register_function(leer_pkl)
+    server.register_function(guardar_pickle)
+    server.register_function(obten_mano)
 
     # Iniciando servidor
     print("\nIniciando servidor...\n")

@@ -26,12 +26,11 @@ class Jugador:
         print("--------------------\n")
         for carta in self.mano:
             cartas = f"{carta.display(baraja.diccionario_cartas)}"
-            print(cartas)
+            #print(cartas)
             cartas_mano.append(cartas)
             # Aquí había una línea de puntuación
 
-        returns = cartas_mano
-        return returns
+        return cartas_mano
 
 
 class Carta:

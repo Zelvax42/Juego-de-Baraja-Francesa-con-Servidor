@@ -24,9 +24,9 @@ def mostrar_bienvenida(jugador, ip, puerto):
     '''
         Imprime el mensaje de bienvenida
     '''
-    print("Bienvenido", jugador)
-    print("Dirección IP:", ip)
-    print("Puerto:", puerto)
+    print("Bienvenido(a) ", jugador)
+    print("Dirección IP: ", ip)
+    print("Puerto: ", puerto)
 
 
 def despliega_menu():
@@ -49,7 +49,7 @@ def despliega_menu():
         return despliega_menu()
 
 
-def mostrar_mano(jugador, mano):
+def mostrar_mano(jugador,mano):
     '''
         muestra la mano de un jugador
         recibe: nombre del jugador, uso: "Emilio"
@@ -58,10 +58,9 @@ def mostrar_mano(jugador, mano):
     # PLIS ALGUIEN HAGA QUE SE IMPRIMA BONEETO ESTO POR FAVOR
     print(jugador)
     print("===================")
-    for carta in mano:
-        for key, val in carta.items():
-            print(str(key) + " " + str(val))
 
+    for carta in mano:
+        print(carta)
 
 def mostrar_jugadores(lista_jugadores):
     '''
@@ -75,24 +74,26 @@ def mostrar_jugadores(lista_jugadores):
         # jugador["mano"]
         # jugador["puntuacion"]
         # jugador es un diccionario
-        print("Jugador", str(i) + ":", jugador["nombre"])
+        print("Jugador ", str(i) + ":", jugador)
         i += 1
 
 
-def mostrar_manos_todos(lista_jugadores):
+def mostrar_manos_todos(lista_nombres_jugadores,proxy):
     '''
         imprime las manos de todos los jugadores
         recibe: una lista de diccionarios, uso: lista_jugadores
     '''
-    for jugador in lista_jugadores:
+    for jugador in lista_nombres_jugadores:
         # jugador["nombre"]
         # jugador["mano"]
         # jugador["puntuacion"]
         # jugador es un diccionario
-        nombre = jugador["nombre"]
-        mano = jugador["mano"]
-        mostrar_mano(nombre, mano)
+        #nombre = jugador["nombre"]
+        #mano = jugador["mano"]
+        #mostrar_mano(nombre, mano)
         print("\n")
+        mano = proxy.obten_mano(jugador)
+        mostrar_mano(jugador,mano)
         ###############################
         # AQUÍ DEBE CALCULAR QUIÉN GANÓ
         # E IMPRIMIRLO
@@ -113,19 +114,26 @@ def main(jugador, ip, puerto):
             print("\n")
             if opcion == 0:
                 pass
-            elif opcion == 1:
-                mano = proxy.pedir_mano(jugador)
-                mostrar_mano(jugador, mano)
-            elif opcion == 2:
-                lista_jugadores = proxy.mostrar_jugadores()
-                mostrar_jugadores(lista_jugadores)
-            elif opcion == 3:
-                lista_jugadores = proxy.mostrar_jugadores()
-                mostrar_manos_todos(lista_jugadores)
-            elif opcion == 4:
-                pass
-            elif opcion == 5:
-                pass
+            else:
+                lista_nombres_jugadores = proxy.mostrar_jugadores()
+                if opcion == 1:
+                    proxy.pedir_mano(jugador)
+                    mano = proxy.obten_mano(jugador)
+                    mostrar_mano(jugador,mano)
+                elif opcion == 2:
+                    if len(lista_nombres_jugadores) > 0:
+                        mostrar_jugadores(lista_nombres_jugadores)
+                    else:
+                        print("No hay jugadores")
+                elif opcion == 3:
+                    if len(lista_nombres_jugadores) > 0:
+                        mostrar_manos_todos(lista_nombres_jugadores,proxy)
+                    else:
+                        print("No hay jugadores")
+                elif opcion == 4:
+                    pass
+                elif opcion == 5:
+                    pass
         print("\n¡Gracias por jugar!\n")
     except ConnectionError:
         print("Error de conexión con el servidor.\n")
