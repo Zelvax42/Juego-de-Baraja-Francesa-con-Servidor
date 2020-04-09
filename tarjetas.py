@@ -42,12 +42,12 @@ class Carta:
         self.figura = figura
 
     def __str__(self):
-        '''
-            POSIBLEMENTE QUEDE EN DESHUSO
-        '''
         return f"{self.valor}-{self.figura}"
 
     def display(self, dict_cartas):
+        '''
+            POSIBLEMENTE QUEDE EN DESHUSO
+        '''
         carta_cara = dict_cartas[self.valor]
         return f"{carta_cara}-{self.figura}"
 
@@ -58,7 +58,7 @@ class Baraja:
     lista_cartas = None
     lista_jugadores = None
 
-    def __init__(self, lista_cartas):
+    def __init__(self):
         # El método Genera_lista_cartas() debe de hacer la lista de 52 cartas
         self.diccionario_cartas = {
             2: "2",
@@ -77,7 +77,7 @@ class Baraja:
         }
         # Corazones, Picas, Trébol, Diamante
         self.figuras = ["C", "P", "T", "D"]
-        self.lista_cartas = lista_cartas
+        self.lista_cartas = genera_lista_cartas()
         self.lista_jugadores = []
 
     def genera_mano(self, num_cartas, nombre_jugador):
