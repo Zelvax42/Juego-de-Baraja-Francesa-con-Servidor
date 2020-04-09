@@ -22,7 +22,7 @@ def mostrar_bienvenida(jugador, ip, puerto):
     '''
         Imprime el mensaje de bienvenida
     '''
-    print("Bienvenido(a) ", jugador)
+    print("Bienvenidx ", jugador)
     print("Dirección IP: ", ip)
     print("Puerto: ", puerto)
 
@@ -65,25 +65,26 @@ def mostrar_jugadores(lista_jugadores):
         imprime todos los jugadores de una lista
         recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
     '''
-    print("Jugadores:", str(len(lista_jugadores)) + "\n")
+    print("Jugadorxs:", str(len(lista_jugadores)) + "\n")
     i = 1
     for jugador in lista_jugadores:
-        print("Jugador", str(i) + ":", jugador)
+        print("Jugador(a)", str(i) + ":", jugador)
         i += 1
 
 
-def mostrar_manos_todos(lista_nombres_jugadores):
+def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos):
     '''
-        imprime las manos de todos los jugadores
+        imprime las manos de todos los jugadores y dice quien ganó
         recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
+        recibe: una lista de las cartas de todos (Carta), uso: lista_cartas_todos
     '''
-    for jugador in lista_nombres_jugadores:
-        print("\n")
-        mano = proxy.obten_mano(jugador)
-        mostrar_mano(jugador, mano)
-        ###############################
-        # AQUÍ DEBE CALCULAR QUIÉN GANÓ
-        # E IMPRIMIRLO
+    if len(lista_nombres_jugadores) > 0:
+        for jugador, mano in zip(lista_nombres_jugadores, lista_cartas_todos):
+            mostrar_mano(jugador, mano)
+
+        # función chila que diga quién ganó aki
+    else:
+        print("No hay jugadores")
 
 
 def main(jugador, ip, puerto):
@@ -101,7 +102,10 @@ def main(jugador, ip, puerto):
             print("\n")
             if opcion == 1:
                 mano = proxy.genera_mano(jugador)
-                mostrar_mano(jugador, mano)
+                if mano != 0:
+                    mostrar_mano(jugador, mano)
+                else:
+                    print("No es posible dar más cartas")
             elif opcion == 2:
                 lista_nombres_jugadores = proxy.mostrar_jugadores()
 
@@ -110,12 +114,11 @@ def main(jugador, ip, puerto):
                 else:
                     print("No hay jugadores")
             elif opcion == 3:
-                lista_nombres_jugadores = proxy.mostrar_jugadores()
-
-                if len(lista_nombres_jugadores) > 0:
-                    mostrar_manos_todos(lista_nombres_jugadores)
-                else:
-                    print("No hay jugadores")
+                lista = proxy.obten_mano_todos()
+                lista_nombres_jugadores = lista[0]
+                lista_cartas_todos = lista[1]
+                mostrar_manos_todos(
+                    lista_nombres_jugadores, lista_cartas_todos)
             elif opcion == 4:
                 pass
             elif opcion == 5:
@@ -131,6 +134,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-j', '--jugador', dest='jugador',
                         help="Nombre del Jugador", required=True)
+    # parser.add_argument('-j', '--jugador', dest='jugador',
+    #                    help="Nombre del Jugador", required=False, default="TEST")  # SOLO DEBUG
     parser.add_argument('-d', '--direccion', dest='direccion',
                         help="Dirección IP", required=False, default="localhost")
     parser.add_argument('-p', '--puerto', dest='puerto',
