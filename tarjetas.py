@@ -23,10 +23,10 @@ class Jugador:
         '''
         cartas_mano = []
         #print("\nJugador: " + self.nombre)
-        #print("--------------------\n")
+        # print("--------------------\n")
         for carta in self.mano:
             cartas = f"{carta.display(baraja.diccionario_cartas)}"
-            #print(cartas)
+            # print(cartas)
             cartas_mano.append(cartas)
             # Aquí había una línea de puntuación
 
@@ -84,7 +84,8 @@ class Baraja:
         '''
             Se genera una nueva lista de cartas revueltas con la cantidad de la mano
             recibe: numero de cartas en mano (int)
-            regresa: una lista de cartas del jugador (list<String>)
+            recibe: nombre de jugador (str), uso: "Emilio"
+            regresa: una lista de cartas del jugador (list<str>)
         '''
         # debe asignar una mano aleatoriamente a cada uno de los jugadores de la lista
 
@@ -102,6 +103,43 @@ class Baraja:
         # ACÁ DEBE HABER UNA FORMA DE REGRESAR LAS CARTAS QUE YA USASTE
 
         return jugador.mano
+
+    def cambia_mano(self, num_cartas, nombre_jugador):
+        '''
+            Regresa una mano nueva
+            recibe: numero de cartas en mano (int), uso: 5
+            recibe: nombre de jugador (str), uso: "Emilio"
+            regresa: una lista de cartas del jugador (list<str>)
+        '''
+        for jugador in self.lista_jugadores:
+            if jugador.nombre == nombre_jugador:
+                for carta in jugador.mano:
+                    # se regresan las cartas a la baraja
+                    self.lista_cartas.append(carta)
+
+                jugador.mano = random.sample(
+                    self.lista_cartas, num_cartas)  # revolvemos baraja
+
+                for carta in jugador.mano:
+                    self.lista_cartas.remove(carta)  # se las damos al jugador
+
+                return jugador.mano
+
+    def regresa_mano(self, num_cartas, nombre_jugador):
+        '''
+            Elimina al jugador y regresa su mano
+            recibe: numero de cartas en mano (int), uso: 5
+            recibe: nombre de jugador (str), uso: "Emilio"
+            Regresa un boolean si el jugador ya tenía cartas
+        '''
+        for jugador in self.lista_jugadores:
+            if jugador.nombre == nombre_jugador:
+                for carta in jugador.mano:
+                    # se regresan las cartas a la baraja
+                    self.lista_cartas.append(carta)
+
+                self.lista_jugadores.remove(jugador)
+
 
     def guarda_jugador(self, jugador):
         self.lista_jugadores.append(jugador)
