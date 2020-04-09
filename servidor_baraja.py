@@ -56,30 +56,57 @@ def leer_pkl():
     return lista
 
 
-def pedir_mano(jugador):
+def existe_jugador(nombre_jugador):
     '''
-        Guarda el jugador en baraja, y te asigna una mano
+        Regresa un boolean si existe un jugador
+        recibe: nombre del jugador, uso: "Emilio"
+    '''
+    baraja = leer_pkl()[0]
+
+    if len(baraja.lista_jugadores) > 0:
+        for jugador in baraja.lista_jugadores:
+            if jugador.nombre == nombre_jugador:
+                return True
+
+    return False
+
+
+def genera_mano(nombre_jugador):
+    '''
+        Guarda el jugador en baraja, y genera una mano para el mismo
         recibe: un nombre de jugador, uso: "emilio"
         regresa: una lista de cartas
     '''
     lista = leer_pkl()  # Se utiliza un pickle para poder usar la información del servidor
     baraja = lista[0]   # objeto baraja que alberga jugadores y cartas
     mano = lista[1]     # tamaño de mano
-    tarjetas.genera_jugador(jugador, baraja)  # Guarda un jugador en baraja
-    lista_cartas = baraja.genera_mano(mano, jugador)  # la lista de cartas del jugador
-    #print(type(lista_cartas[0]))
-    print(jugador, "Solicitó pedir mano")
+
+    if existe_jugador(nombre_jugador) == False:
+        # Guarda un jugador en baraja
+        tarjetas.genera_jugador(nombre_jugador, baraja)
+
+    # la lista de cartas del jugador
+    baraja.genera_mano(mano, nombre_jugador)
+
+    print(nombre_jugador, "solicitó pedir mano")
     guardar_pickle(baraja, mano)  # Se guardan los valores sobreescritos
-    return lista_cartas
+    return obten_mano(nombre_jugador)
+
 
 def obten_mano(nombre_jugador):
+    '''
+        obtiene la mano de un jugador a partir de su nombre
+        recibe: nombre_jugador, uso: "Emilio"
+        regresa: lista de objetos carta
+    '''
     baraja = leer_pkl()[0]
-    print(type(baraja))
+
     for j in baraja.lista_jugadores:
         if j.nombre == nombre_jugador:
             jugador = j
             lista_cartas = jugador.despliega_mano(baraja)
             return lista_cartas
+
 
 def mostrar_jugadores():
     '''
@@ -107,15 +134,12 @@ def prueba_conexion(jugador):
 def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por mano
     server = crear_servidor(ip, puerto)
 
-    lista_cartas = tarjetas.genera_lista_cartas()
-    baraja = tarjetas.Baraja(lista_cartas)
+    baraja = tarjetas.Baraja()
     guardar_pickle(baraja, mano)
 
     server.register_function(prueba_conexion)
-    server.register_function(pedir_mano)
+    server.register_function(genera_mano)
     server.register_function(mostrar_jugadores)
-    server.register_function(leer_pkl)
-    server.register_function(guardar_pickle)
     server.register_function(obten_mano)
 
     # Iniciando servidor
