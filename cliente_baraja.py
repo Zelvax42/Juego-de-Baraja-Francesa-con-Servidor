@@ -16,6 +16,7 @@ import xmlrpc.client
 import argparse
 import servidor_baraja
 import tarjetas
+import time
 
 
 def mostrar_bienvenida(jugador, ip, puerto):
@@ -99,6 +100,10 @@ def main(jugador, ip, puerto):
         # print(proxy.prueba_conexion(jugador))  # SOLO USAR PARA TESTING
         opcion = 666
         tiene_mano = False
+        jugado = False
+        mano = []
+        lista_nombres_jugadores = []
+        lista_cartas_todos = []
         while opcion != 0:
             opcion = despliega_menu()
             print("\n")
@@ -122,8 +127,25 @@ def main(jugador, ip, puerto):
                 lista_cartas_todos = lista[1]
                 mostrar_manos_todos(
                     lista_nombres_jugadores, lista_cartas_todos)
+                jugado = True
             elif opcion == 4:
-                pass
+                if jugado == True:
+                    if len(mano) != 0:
+                        num_cartas = len(mano)
+                        mano = proxy.cambiar_mano(num_cartas,jugador)
+                        tiene_mano = True
+                        mostrar_mano(jugador,mano)
+                        time.sleep(3.0)
+                        print("\n")
+                        if len(lista_nombres_jugadores) > 1:
+                            mostrar_manos_todos(
+                                lista_nombres_jugadores, lista_cartas_todos)
+                        else:
+                            print("No hay suficientes jugadores")
+                    else:
+                        print("No cuenta con una mano aún")
+                else:
+                    print("No se ha iniciado ninguna partida")
             elif opcion == 5:
                 pass
         if tiene_mano == True:  # ya tienes una mano
