@@ -117,7 +117,7 @@ class Baraja:
                 for carta in jugador.mano:
                     # se regresan las cartas a la baraja
                     self.lista_cartas.append(carta)
-
+                jugador.mano.clear()
                 jugador.mano = random.sample(
                     self.lista_cartas, num_cartas)  # revolvemos baraja
 
