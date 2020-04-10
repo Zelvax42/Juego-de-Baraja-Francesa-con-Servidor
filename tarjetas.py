@@ -10,11 +10,12 @@ class Jugador:
     nombre = None
     mano = None
     puntuacion = None
-
+    ganadas_jeje = None
     def __init__(self, nombre, baraja):
         self.nombre = nombre
         self.mano = []
         self.puntuacion = 0
+        self.ganadas_jeje = 0
         baraja.guarda_jugador(self)
 
     def despliega_mano(self, baraja):
@@ -32,6 +33,9 @@ class Jugador:
             # Aquí había una línea de puntuación
 
         return cartas_mano
+
+    def ordena_mano(self):
+        self.mano.sort(key=lambda x: x.valor, reverse=True)
 
 
 class Carta:
@@ -118,6 +122,7 @@ class Baraja:
                     # se regresan las cartas a la baraja
                     self.lista_cartas.append(carta)
 
+                jugador.mano.clear()
                 jugador.mano = random.sample(
                     self.lista_cartas, num_cartas)  # revolvemos baraja
 
@@ -148,40 +153,38 @@ class Baraja:
         '''
             Calcula el puntaje de todos los jugadores
             regresa: diccionario de jugadores con lista de pares y tercias
-            dicc["Emilio"] = pares:2, tercias:1
-            key = "Emilio", value = [2, 1]
+            dicc[jugador.nombre] = pares:2, tercias:1
+            key = jugador.nombre, value = [2, 1]
         '''
-        # ESTO ES SUPONIENDO QUE LA MANO ESTA ORDENDA
-        for jugador in self.lista_jugadores:  # recorremos los jugadores
-            dicc_jugadores = dict()
+        lista_nueva = list()
+        dicc_jugadores = dict()
+
+        for jugador in self.lista_jugadores:
+            jugador.ordena_mano()
+
+            # Convertimos la mano en una lista nueva de solo números.
+            for carta in jugador.mano:
+                lista_nueva.append(carta.valor)
+
+            # Contamos el número de cartas repetidas y se guardan en un diccionario
+            dicc = {i:lista_nueva.count(i) for i in lista_nueva} #Muchas gracias al Octavio no? que me paso esta cosa un saludaxo
             pares = 0
             tercias = 0
-            cartas_repetidas = list()
-            valor_temp = int()
-            i = 0
-            for carta in jugador.mano:  # obtendremos cada carta de cada jugador
-                valor = carta.valor
-                if i == 0:  # es la primera carta
-                    # importante el copiar objeto y no referenciar
-                    valor_temp = copy.copy(valor)
-                    cartas_repetidas.append(carta)
-                    i = 1
 
-                elif valor_temp == valor:  # si la carta anterior es igual a la siguiente
-                    cartas_repetidas.append(carta)
-                else:
-                    if len(cartas_repetidas) > 1:  # no puede ser par o tercia
-                        if len(cartas_repetidas) % 2 == 0:  # son pares
-                            # la verdad no se si el referenciar sea problema
-                            pares += len(copy.copy(cartas_repetidas))/2
-                        elif len(cartas_repetidas) % 3 == 0:  # son tercias
-                            # la verdad no se si el referenciar sea problema
-                            tercias += len(copy.copy(cartas_repetidas))/3
+            for valor_carta, repetidos in dicc.items():
+                if repetidos == 2: # Es par.
+                    pares += 1
+                    jugador.puntuacion += valor_carta*repetidos
 
-                            cartas_repetidas = list()
-                            valor_temp = int()
+                elif repetidos == 4: # Son dos pares.
+                    pares += 2
+                    jugador.puntuacion += valor_carta*repetidos
 
-            dicc_jugadores[jugador.nombre] = [pares, tercias]
+                elif repetidos == 3: # Es tercia.
+                    tercias += 1
+                    jugador.puntuacion += valor_carta*repetidos
+
+            dicc_jugadores[jugador.nombre] = [pares, tercias, jugador.puntuacion]
 
         return dicc_jugadores
 
