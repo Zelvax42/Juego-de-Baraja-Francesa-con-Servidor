@@ -94,15 +94,15 @@ class Baraja:
             if j.nombre == nombre_jugador:
                 jugador = j
 
-        jugador.mano = random.sample(self.lista_cartas, num_cartas)
+                jugador.mano = random.sample(self.lista_cartas, num_cartas)
 
         # Se eliminan las cartas del jugador en la lista de cartas disponibles
-        for carta in jugador.mano:
-            self.lista_cartas.remove(carta)
+                for carta in jugador.mano:
+                    self.lista_cartas.remove(carta)
 
         # ACÁ DEBE HABER UNA FORMA DE REGRESAR LAS CARTAS QUE YA USASTE
 
-        return jugador.mano
+                return jugador.mano
 
     def cambia_mano(self, num_cartas, nombre_jugador):
         '''
@@ -123,7 +123,7 @@ class Baraja:
                 for carta in jugador.mano:
                     self.lista_cartas.remove(carta)  # se las damos al jugador
 
-                return jugador.mano
+                return jugador.despliega_mano(self)
 
     def regresa_mano(self, num_cartas, nombre_jugador):
         '''
