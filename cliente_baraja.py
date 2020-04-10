@@ -84,22 +84,24 @@ def mostrar_mano(jugador, mano):
         recibe: nombre del jugador, uso: "Emilio"
         recibe: diccionario de cartas del jugador, uso: mano
     '''
-    lista = []
-    sorted(mano)
+    
     print("===========================")
     print(str(jugador) + ", tu mano es: \n")
-    
+    ordena_mano(mano)
+    print("===========================\n")
+
+def ordena_mano(mano):
+    lista_mano = []
     for carta in mano:
         carta_separada = carta.split("-")
-        lista.append(carta_separada)
-
-
-    ordered_list = sorted(lista, key=lambda numero:numero[0])
+        lista_mano.append(carta_separada)
+    
+    ordered_list = sorted(lista_mano, key=lambda numero:numero[0])
 
     for carta in ordered_list:
         print(carta[0], "-", carta[1])
-    print("===========================\n")
-
+    
+    
 def mostrar_jugadores(lista_jugadores):
     '''
         imprime todos los jugadores de una lista
