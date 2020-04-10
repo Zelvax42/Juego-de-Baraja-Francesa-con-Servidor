@@ -114,6 +114,16 @@ def mostrar_jugadores(lista_jugadores):
         print(" - Jugador(a)", str(i) + ":", jugador)
         i += 1
 
+def mostrar_marcador(lista_jugadores):
+    '''
+        Imprime los jugadores que han jugado, y las veces que han ganado. Además de la ronda en la que están.
+    '''
+    veces_ganadas = 0 #Esto es de mentira, se debe de hacer algo para obtener las veces ganadas de cada jugador.
+    print("== MARCADOR ==\n")
+    
+    for jugador in lista_jugadores:
+        print("Jugador:", jugador, "(" + str(veces_ganadas) + " partidas ganadas).")
+    
 
 def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos):
     '''
@@ -146,6 +156,7 @@ def main(jugador, ip, puerto):
         mano = []
         lista_nombres_jugadores = []
         lista_cartas_todos = []
+        rondas = 0
         while opcion != 0:
             opcion = despliega_menu()
             print("\n")
@@ -163,13 +174,21 @@ def main(jugador, ip, puerto):
                     mostrar_jugadores(lista_nombres_jugadores)
                 else:
                     print("Aún no se han agregado jugadores. Intenta agregar algunos.")
+            
             elif opcion == 3:
                 lista = proxy.obten_mano_todos()
                 lista_nombres_jugadores = lista[0]
                 lista_cartas_todos = lista[1]
-                mostrar_manos_todos(
+                
+                if len(lista_nombres_jugadores) > 1:
+                    mostrar_manos_todos(
                     lista_nombres_jugadores, lista_cartas_todos)
-                jugado = True
+                    jugado = True
+                    rondas += 1
+                else:
+                    print("No hay suficientes jugadores en la partida."
+                    + "Intenta agregar más de 1.")
+
             elif opcion == 4:
                 if jugado == True:
                     if len(mano) != 0:
@@ -193,22 +212,31 @@ def main(jugador, ip, puerto):
                 else:
                     print("Ninguna partida ha sido iniciada por el momento.")
                     time.sleep(3)
+                    
             elif opcion == 5:
-                pass
-                #print("prueba")
-                #proxy.marcador_partida()
+                lista_nombres_jugadores = proxy.mostrar_jugadores()
+
+                if len(lista_nombres_jugadores) > 0 and (jugado == True):
+                    mostrar_marcador(lista_nombres_jugadores)
+                else:
+                    print("No hay suficientes jugadores o bien, no se ha jugado una partida aún.")
+                print("\nRondas jugadas:", rondas, "\n")
+                
             elif opcion == 6:
                 faq()
+
         if tiene_mano == True:  # ya tienes una mano
             proxy.salir(jugador)
         print("\n¡Gracias por jugar!\n")
+
     except ConnectionError:
         print("Ha habido un error de conexión con el servidor.\n")
+
     except KeyboardInterrupt:
         if tiene_mano == True:  # ya tienes una mano
-            print("No")
             proxy.salir(jugador)
         print(str(jugador) + ", haz salido de la partida.")
+
     except:
         print(str(jugador) + ", has salido de la partida. Tu mano ha sido devuelta a la baraja.\n"
             + "Gracias por 'JUEGAR'.\n")
