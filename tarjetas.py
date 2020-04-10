@@ -1,4 +1,5 @@
 import random
+import copy
 
 '''
     Programa del juego de la baraja francesa
@@ -140,9 +141,49 @@ class Baraja:
 
                 self.lista_jugadores.remove(jugador)
 
-
     def guarda_jugador(self, jugador):
         self.lista_jugadores.append(jugador)
+
+    def calcula_puntaje(self):
+        '''
+            Calcula el puntaje de todos los jugadores
+            regresa: diccionario de jugadores con lista de pares y tercias
+            dicc["Emilio"] = pares:2, tercias:1
+            key = "Emilio", value = [2, 1]
+        '''
+        # ESTO ES SUPONIENDO QUE LA MANO ESTA ORDENDA
+        for jugador in self.lista_jugadores:  # recorremos los jugadores
+            dicc_jugadores = dict()
+            pares = 0
+            tercias = 0
+            cartas_repetidas = list()
+            valor_temp = int()
+            i = 0
+            for carta in jugador.mano:  # obtendremos cada carta de cada jugador
+                valor = carta.valor
+                if i == 0:  # es la primera carta
+                    # importante el copiar objeto y no referenciar
+                    valor_temp = copy.copy(valor)
+                    cartas_repetidas.append(carta)
+                    i = 1
+
+                elif valor_temp == valor:  # si la carta anterior es igual a la siguiente
+                    cartas_repetidas.append(carta)
+                else:
+                    if len(cartas_repetidas) > 1:  # no puede ser par o tercia
+                        if len(cartas_repetidas) % 2 == 0:  # son pares
+                            # la verdad no se si el referenciar sea problema
+                            pares += len(copy.copy(cartas_repetidas))/2
+                        elif len(cartas_repetidas) % 3 == 0:  # son tercias
+                            # la verdad no se si el referenciar sea problema
+                            tercias += len(copy.copy(cartas_repetidas))/3
+
+                            cartas_repetidas = list()
+                            valor_temp = int()
+
+            dicc_jugadores[jugador.nombre] = [pares, tercias]
+
+        return dicc_jugadores
 
 
 def genera_lista_cartas():
