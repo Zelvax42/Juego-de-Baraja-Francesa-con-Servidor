@@ -198,6 +198,9 @@ def main(jugador, ip, puerto):
                         print("¡Nueva mano!")
                         mostrar_mano(jugador,mano)
                         print("\nCalculando las manos de los jugadores oponentes...")
+                        lista = proxy.obten_mano_todos()
+                        lista_nombres_jugadores = lista[0]
+                        lista_cartas_todos = lista[1]
                         time.sleep(3.0)
                         print("\n")
                         if len(lista_nombres_jugadores) > 1:
