@@ -36,10 +36,11 @@ def guardar_pickle(baraja, mano):
     '''
     try:
         lista = [baraja, mano]
-        pickle.dump(lista, open("pickle.pkl", "wb"))
-        print("Se actualizó", "pickle.pkl\n")
+        nombre_archivo = "pickle.pkl"
+        pickle.dump(lista, open(nombre_archivo, "wb"))
+        print("Notificación: '" + str(nombre_archivo) + "'" + " se ha actualizado.\n")
     except:
-        print("Hubo un problema al guardar el archivo")
+        print("Hubo un problema al guardar el archivo.")
 
 
 def leer_pkl():
@@ -92,9 +93,11 @@ def genera_mano(nombre_jugador):
             # Cambiamos su mano por otra
             cambiar_mano(mano, nombre_jugador)
 
-        print(nombre_jugador, "solicitó pedir mano")
-        print("Quedan", len(baraja.lista_cartas), "cartas")
+        print("== Actualización del servidor ==")
+        print("\n" + str(nombre_jugador) + ": ha solicitado una mano.")
+        print("Quedan:", str(len(baraja.lista_cartas)), "cartas." + " (" + str(len(baraja.lista_cartas)) +"/"+ "52).")
         guardar_pickle(baraja, mano)  # Se guardan los valores sobreescritos
+        print("== Actualización exitosa ==\n")
         return obten_mano(nombre_jugador)
     else:
         return 0
@@ -169,9 +172,12 @@ def salir(nombre_jugador):
     # se retorna las cartas a la baraja
     baraja.regresa_mano(mano, nombre_jugador)
 
-    print("El jugador(a):", nombre_jugador, "se ha desconectado")
-    print("Quedan", len(baraja.lista_cartas), "cartas")
+    print("== Actualización del servidor ==")
+    print("\nEl jugador(a):", nombre_jugador, "se ha desconectado.")
+    print("Quedan: " + str(len(baraja.lista_cartas)) + " cartas. " + "(" + str(len(baraja.lista_cartas)) +"/"+ "52).")
     guardar_pickle(baraja, mano)
+    print("== Actualización exitosa ==\n")
+    
 
 
 def prueba_conexion(jugador):
@@ -210,7 +216,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
         server.serve_forever()
 
     except KeyboardInterrupt:
-        print("\nApagando servidor...\n")
+        print("\nApagando servidor " + "('" + str(direccion) + "', '" +  str(puerto) + "')...\n")
 
 
 if __name__ == "__main__":
