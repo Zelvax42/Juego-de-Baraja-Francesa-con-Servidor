@@ -36,7 +36,7 @@ def despliega_menu():
     print("3.- Mostrar manos de todos.")
     print("4.- Volver a jugar.")
     print("5.- Mostrar marcador (ver el estado del juego).")
-    print("6.- Preguntas frecuentemente preguntadas.")
+    print("6.- Preguntas frecuentemente preguntadas. <-- ¡IMPORTANTE!")
     print("0.- Salir.")
     o = input("\nOpción:> ")
 
@@ -63,7 +63,8 @@ def faq():
      + "        Teóricamente aquí se decide quién gana.")
     
     print("\n¿Qué hace la opción '4'?")
-    print("     Reinicia el juego. Limpia las manos. Devuelve las cartas.\n")
+    print("     Reinicia el juego. Limpia las manos. Devuelve las cartas.\n"
+        + "Para lograr esto, es necesario haber terminado una partida o haber pulsado '3'.")
 
     print("\n¿Qué hace la opción '5'?")
     print("     Este es el marcador de la partida.\n"
@@ -91,12 +92,12 @@ def mostrar_mano(jugador, mano):
     print("===========================\n")
 
 def ordena_mano(mano):
-    lista_mano = []
-    for carta in mano:
-        carta_separada = carta.split("-")
-        lista_mano.append(carta_separada)
+    lista_mano = [] 
+    for carta in mano: #Se itera la mano.
+        carta_separada = carta.split("-") #Al ser un string, se separa cada vez que encuentre un '-'.
+        lista_mano.append(carta_separada) #Se hace un append del resultado a lista_mano
     
-    ordered_list = sorted(lista_mano, key=lambda numero:numero[0])
+    ordered_list = sorted(lista_mano, key=lambda numero:numero[0]) #Se ordena lista_mano por su indice [0], uso: número de la carta.
 
     for carta in ordered_list:
         print(carta[0], "-", carta[1])
