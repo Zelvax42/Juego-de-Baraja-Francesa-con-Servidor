@@ -90,7 +90,7 @@ def genera_mano(nombre_jugador):
 
         else:  # esto significa que ya debe tener una mano
             # Cambiamos su mano por otra
-            baraja.cambia_mano(mano, nombre_jugador)
+            cambiar_mano(mano, nombre_jugador)
 
         print(nombre_jugador, "solicitó pedir mano")
         print("Quedan", len(baraja.lista_cartas), "cartas")
@@ -98,6 +98,11 @@ def genera_mano(nombre_jugador):
         return obten_mano(nombre_jugador)
     else:
         return 0
+
+def cambiar_mano(mano, nombre_jugador):
+    baraja = leer_pkl()[0]
+    nueva_mano = baraja.cambia_mano(mano, nombre_jugador)
+    return nueva_mano
 
 
 def obten_mano(nombre_jugador):
@@ -164,7 +169,7 @@ def salir(nombre_jugador):
     # se retorna las cartas a la baraja
     baraja.regresa_mano(mano, nombre_jugador)
 
-    print("El jugador(a):", nombre_jugador, "se ha desconectadx")
+    print("El jugador(a):", nombre_jugador, "se ha desconectado")
     print("Quedan", len(baraja.lista_cartas), "cartas")
     guardar_pickle(baraja, mano)
 
@@ -189,6 +194,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
     server.register_function(obten_mano)
     server.register_function(obten_mano_todos)
     server.register_function(salir)
+    server.register_function(cambiar_mano)
 
     # Iniciando servidor
     print("\nIniciando servidor...\n")
