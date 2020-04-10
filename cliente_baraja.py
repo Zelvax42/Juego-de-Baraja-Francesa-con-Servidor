@@ -35,18 +35,48 @@ def despliega_menu():
     print("2.- Mostrar jugadores.")
     print("3.- Mostrar manos de todos.")
     print("4.- Volver a jugar.")
-    print("5.- Mostrar marcador (ver el estado de la partida).")
+    print("5.- Mostrar marcador (ver el estado del juego).")
+    print("6.- Preguntas frecuentemente preguntadas.")
     print("0.- Salir.")
     o = input("\nOpción:> ")
 
     # agregar número si agregas opción nueva
-    opciones = ['1', '2', '3', '4', '5', '0']
+    opciones = ['1', '2', '3', '4', '5', '6', '0']
     if o in opciones:
         return int(o)
     else:
         print("Por favor, elige una opción dentro del rango de opciones.")
         return despliega_menu()
 
+def faq():
+    print("== PREGUNTAS FRECUENTEMENTE PREGUNTADAS ==\n")
+    print("\n¿Qué hace la opción '1'?")
+    print("     Al empezar a jugar, se entra en modo espectador.\n"
+     + "Si se quiere jugar, se debe pedir una mano de la baraja.")
+    
+    print("\n¿Qué hace la opción '2'?")
+    print("     Muestra a los jugadores dentro de la partida.\n"
+     + "        Es necesario haber pedido cartas para aparecer aquí.")
+
+    print("\n¿Qué hace la opción '3'?")
+    print("     Muestra la mano de los 'juegadores'.\n"
+     + "        Teóricamente aquí se decide quién gana.")
+    
+    print("\n¿Qué hace la opción '4'?")
+    print("     Reinicia el juego. Limpia las manos. Devuelve las cartas.\n")
+
+    print("\n¿Qué hace la opción '5'?")
+    print("     Este es el marcador de la partida.\n"
+     + "        Muestra a los jugadores y sus victorias.")
+
+    print("\n¿Qué hace la opción '6'?")
+    print("     Abre un FAQ, estás dentro.\n")
+
+    print("\n¿Qué hace la opción '0'?")
+    print("     Te saca de la partida.\n"
+     + "        Manda un mensaje al servidor de tu salida. Se devuelven tus cartas a la baraja.\n")
+
+    salir = input("Presiona ENTER para salir.")
 
 def mostrar_mano(jugador, mano):
     '''
@@ -54,11 +84,20 @@ def mostrar_mano(jugador, mano):
         recibe: nombre del jugador, uso: "Emilio"
         recibe: diccionario de cartas del jugador, uso: mano
     '''
-    print(str(jugador) + ", tu mano es: ")
+    lista = []
+    sorted(mano)
     print("===========================")
-
+    print(str(jugador) + ", tu mano es: \n")
+    
     for carta in mano:
-        print(carta)
+        carta_separada = carta.split("-")
+        lista.append(carta_separada)
+
+
+    ordered_list = sorted(lista, key=lambda numero:numero[0])
+
+    for carta in ordered_list:
+        print(carta[0], "-", carta[1])
     print("===========================\n")
 
 def mostrar_jugadores(lista_jugadores):
@@ -134,7 +173,9 @@ def main(jugador, ip, puerto):
                         num_cartas = len(mano)
                         mano = proxy.cambiar_mano(num_cartas,jugador)
                         tiene_mano = True
+                        print("¡Nueva mano!")
                         mostrar_mano(jugador,mano)
+                        print("\nCalculando las manos de los jugadores oponentes...")
                         time.sleep(3.0)
                         print("\n")
                         if len(lista_nombres_jugadores) > 1:
@@ -144,13 +185,17 @@ def main(jugador, ip, puerto):
                             print("No hay suficientes jugadores en la partida. Intenta agregar más de uno.")
                             time.sleep(3)
                     else:
-                        print("No cuentas con una mano aún. Intenta pedir mano (1.)")
+                        print("No cuentas con una mano aún. Intenta pedir mano (1).")
                         time.sleep(3)
                 else:
                     print("Ninguna partida ha sido iniciada por el momento.")
                     time.sleep(3)
             elif opcion == 5:
                 pass
+                #print("prueba")
+                #proxy.marcador_partida()
+            elif opcion == 6:
+                faq()
         if tiene_mano == True:  # ya tienes una mano
             proxy.salir(jugador)
         print("\n¡Gracias por jugar!\n")
@@ -162,7 +207,8 @@ def main(jugador, ip, puerto):
             proxy.salir(jugador)
         print(str(jugador) + ", haz salido de la partida.")
     except:
-        print("Has salido de la partida. Tu mano ha sido devuelta a la baraja.\n")
+        print(str(jugador) + ", has salido de la partida. Tu mano ha sido devuelta a la baraja.\n"
+            + "Gracias por 'JUEGAR'.\n")
 
 
 if __name__ == "__main__":
