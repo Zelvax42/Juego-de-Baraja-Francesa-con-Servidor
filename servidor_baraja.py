@@ -104,13 +104,7 @@ def genera_mano(nombre_jugador):
 
 def cambiar_mano(mano, nombre_jugador):
     baraja = leer_pkl()[0]
-    for j in baraja.lista_jugadores:
-        if j.nombre == nombre_jugador:
-            print(j.despliega_mano(baraja))
     nueva_mano = baraja.cambia_mano(mano, nombre_jugador)
-    for j in baraja.lista_jugadores:
-        if j.nombre == nombre_jugador:
-            print(j.despliega_mano(baraja))
     guardar_pickle(baraja,mano)
     return nueva_mano
 
