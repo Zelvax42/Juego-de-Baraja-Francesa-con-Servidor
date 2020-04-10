@@ -23,7 +23,7 @@ def mostrar_bienvenida(jugador, ip, puerto):
     '''
         Imprime el mensaje de bienvenida
     '''
-    print("Bienvenidx ", jugador)
+    print("Hola, ", jugador,  "\b!")
     print("Dirección IP: ", ip)
     print("Puerto: ", puerto)
 
@@ -31,12 +31,12 @@ def mostrar_bienvenida(jugador, ip, puerto):
 def despliega_menu():
     print("--------------------------\n")
     print("** MENU **\n")
-    print("1.- Pedir mano")
-    print("2.- Mostrar jugadores")
-    print("3.- Mostrar manos de todos")
-    print("4.- Volver a jugar")
-    print("5.- Mostrar marcador")
-    print("0.- Salir")
+    print("1.- Pedir mano.")
+    print("2.- Mostrar jugadores.")
+    print("3.- Mostrar manos de todos.")
+    print("4.- Volver a jugar.")
+    print("5.- Mostrar marcador (ver el estado de la partida).")
+    print("0.- Salir.")
     o = input("\nOpción:> ")
 
     # agregar número si agregas opción nueva
@@ -44,7 +44,7 @@ def despliega_menu():
     if o in opciones:
         return int(o)
     else:
-        print("¡Opción incorrecta!")
+        print("Por favor, elige una opción dentro del rango de opciones.")
         return despliega_menu()
 
 
@@ -54,22 +54,22 @@ def mostrar_mano(jugador, mano):
         recibe: nombre del jugador, uso: "Emilio"
         recibe: diccionario de cartas del jugador, uso: mano
     '''
-    print(jugador)
-    print("===================")
+    print(str(jugador) + ", tu mano es: ")
+    print("===========================")
 
     for carta in mano:
         print(carta)
-
+    print("===========================\n")
 
 def mostrar_jugadores(lista_jugadores):
     '''
         imprime todos los jugadores de una lista
         recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
     '''
-    print("Jugadorxs:", str(len(lista_jugadores)) + "\n")
+    print("* Jugadores:", str(len(lista_jugadores)) + "\n")
     i = 1
     for jugador in lista_jugadores:
-        print("Jugador(a)", str(i) + ":", jugador)
+        print(" - Jugador(a)", str(i) + ":", jugador)
         i += 1
 
 
@@ -86,11 +86,11 @@ def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos):
 
         # función chila que diga quién ganó aki
     else:
-        print("No hay jugadores")
+        print("No existen jugadores dentro de la partida. Intenta agregar algunos.")
 
 
 def main(jugador, ip, puerto):
-    print("\n== JUEGO DE BARAJA FRANCESA ==\n")
+    print("\n== JUEGO DE BARAJA FRANCESA (ahora con servidor)==\n")
     print("Iniciando...\n")
 
     try:
@@ -113,14 +113,14 @@ def main(jugador, ip, puerto):
                 if mano != 0:
                     mostrar_mano(jugador, mano)
                 else:
-                    print("No es posible dar más cartas")
+                    print("No es posible dar más cartas.")
             elif opcion == 2:
                 lista_nombres_jugadores = proxy.mostrar_jugadores()
 
                 if len(lista_nombres_jugadores) > 0:
                     mostrar_jugadores(lista_nombres_jugadores)
                 else:
-                    print("No hay jugadores")
+                    print("Aún no se han agregado jugadores. Intenta agregar algunos.")
             elif opcion == 3:
                 lista = proxy.obten_mano_todos()
                 lista_nombres_jugadores = lista[0]
@@ -141,24 +141,28 @@ def main(jugador, ip, puerto):
                             mostrar_manos_todos(
                                 lista_nombres_jugadores, lista_cartas_todos)
                         else:
-                            print("No hay suficientes jugadores")
+                            print("No hay suficientes jugadores en la partida. Intenta agregar más de uno.")
+                            time.sleep(3)
                     else:
-                        print("No cuenta con una mano aún")
+                        print("No cuentas con una mano aún. Intenta pedir mano (1.)")
+                        time.sleep(3)
                 else:
-                    print("No se ha iniciado ninguna partida")
+                    print("Ninguna partida ha sido iniciada por el momento.")
+                    time.sleep(3)
             elif opcion == 5:
                 pass
         if tiene_mano == True:  # ya tienes una mano
             proxy.salir(jugador)
         print("\n¡Gracias por jugar!\n")
     except ConnectionError:
-        print("Error de conexión con el servidor.\n")
+        print("Ha habido un error de conexión con el servidor.\n")
     except KeyboardInterrupt:
         if tiene_mano == True:  # ya tienes una mano
+            print("No")
             proxy.salir(jugador)
-        print("Cancelado por el usuario")
+        print(str(jugador) + ", haz salido de la partida.")
     except:
-        print("según esto hay un error, al aplicar proxy.salir(), no sé xq y parece no afectar en nada\n")
+        print("Has salido de la partida. Tu mano ha sido devuelta a la baraja.\n")
 
 
 if __name__ == "__main__":
