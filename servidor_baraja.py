@@ -185,10 +185,16 @@ def obten_puntaje():
 
     guardar_pickle(baraja, mano)
     lista = [dicc_puntos, definir_ganador(dicc_puntos)]
-    l = list()
+    l = list() # empatados, o en defecto, ganador
     for s in lista[1]:
         l.append(s)
 
+    if len(l) == 1:
+        for jugador in baraja.lista_jugadores:
+            if l[0] == jugador.nombre:
+                jugador.ganadas_jeje += 1 # actualizamos el puntaje del jugador
+
+    guardar_pickle(baraja, mano)
     lista = [dicc_puntos, l]
     return lista
 
@@ -222,75 +228,54 @@ def definir_ganador(dicc_puntos):
 
             if tercias_pasado > 0 and tercias_actual == 0:
                 # gana el pasado
-                print("Ganó el pasado: 210")
-                print(nombre_pasado)
                 pass
             elif tercias_pasado == 0 and tercias_actual == 0:
                 # no tienen tercias, posiblemente pares
                 if pares_pasado > 0 and pares_actual == 0:
                     # gana el pasado
-                    print("Ganó el pasado: 216")
-                    print(nombre_pasado)
                     pass
                 elif pares_pasado == pares_actual:
                     if pares_pasado == 0 and pares_actual == 0:
                         # empate
-                        print("Empate: 221")
                         set_empatados = empate(
                             set_empatados, nombre_pasado, nombre_actual, puntuacion_pasado, puntuacion_actual)
-                        print("Empate: 223")
                     else:
                         # desempate de puntos
                         if puntuacion_pasado > puntuacion_actual:
                             # gana pasado
-                            print("Ganó el pasado: 228")
-                            print(nombre_pasado)
+                            pass
                         elif puntuacion_pasado == puntuacion_actual:
                             # empate
-                            print("Empate: 232")
                             set_empatados = empate(
                                 set_empatados, nombre_pasado, nombre_actual, puntuacion_pasado, puntuacion_actual)
-                            print("Empate: 234")
                         else:
                             # gana el actual
-                            print("Ganó el actual: 237")
-                            print(nombre_actual)
                             nombre_pasado = copy.copy(nombre_jugador)
                             jugador_pasado = copy.copy(jugador_actual)
                 else:
                     # gana el actual
-                    print("Ganó el actual: 242")
-                    print(nombre_actual)
                     nombre_pasado = copy.copy(nombre_jugador)
                     jugador_pasado = copy.copy(jugador_actual)
             elif tercias_pasado == tercias_actual:
                 # desempate de puntos
                 if puntuacion_pasado > puntuacion_actual:
                     # gana pasado
-                    print("Ganó el pasado: 249")
-                    print(nombre_pasado)
+                    pass
                 elif puntuacion_pasado == puntuacion_actual:
                     # empate
-                    print("Empate: 253")
                     set_empatados = empate(
                         set_empatados, nombre_pasado, nombre_actual, puntuacion_pasado, puntuacion_actual)
-                    print("Empate: 255")
                 else:
                     # gana actual
-                    print("Ganó el actual: 258")
-                    print(nombre_actual)
                     nombre_pasado = copy.copy(nombre_jugador)
                     jugador_pasado = copy.copy(jugador_actual)
             else:
                 # gana el actual
-                print("Ganó el pasado: 263")
-                print(nombre_actual)
                 nombre_pasado = copy.copy(nombre_jugador)
                 jugador_pasado = copy.copy(jugador_actual)
 
             set_empatados = empate(
                 set_empatados, nombre_pasado, nombre_actual, puntuacion_pasado, puntuacion_actual)
-            print("268")
     return set_empatados
 
 
@@ -322,6 +307,11 @@ def numero_rondas(temp):
     return temp
 
 
+def opcion_3():
+    lista = [obten_mano_todos, obten_puntaje]
+    return lista
+
+
 def salir(nombre_jugador):
     baraja = leer_pkl()[0]
     mano = leer_pkl()[1]  # tamaño de mano
@@ -349,6 +339,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
 
     baraja = tarjetas.Baraja()
     guardar_pickle(baraja, mano)
+    num_rondas = 1
 
     server.register_function(prueba_conexion)
     server.register_function(genera_mano)
@@ -359,6 +350,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
     server.register_function(cambiar_mano)
     server.register_function(obten_puntaje)
     server.register_function(numero_rondas)
+    server.register_function(opcion_3)
     # Iniciando servidor
     print("\nIniciando servidor...\n")
     try:
