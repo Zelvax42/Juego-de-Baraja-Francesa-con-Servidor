@@ -196,8 +196,18 @@ def obten_puntaje():
 
     guardar_pickle(baraja, mano)
     lista = [dicc_puntos, l]
-    return lista
 
+    new_rondas = numero_rondas()
+
+    return lista, new_rondas
+
+def obten_partidas_ganadas():
+    baraja = leer_pkl()[0]
+    dict_partidas_ganadas = {}
+    for jugador in baraja.lista_jugadores:
+        dict_partidas_ganadas[jugador.nombre] = jugador.ganadas_jeje
+    rondas = obten_rondas_actuales()
+    return dict_partidas_ganadas, rondas
 
 def definir_ganador(dicc_puntos):
     '''
@@ -302,10 +312,16 @@ def empate(set_empatados, nombre_pasado, nombre_actual, puntuacion_pasado, puntu
     return set_empatados
 
 
-def numero_rondas(temp):
-    temp += 1
-    return temp
+def numero_rondas():
+    baraja = leer_pkl()[0]
+    mano = leer_pkl()[1]
+    baraja.rondas += 1
+    guardar_pickle(baraja, mano)
+    return baraja.rondas
 
+def obten_rondas_actuales():
+    baraja = leer_pkl()[0]
+    return baraja.rondas
 
 def opcion_3():
     lista = [obten_mano_todos, obten_puntaje]
@@ -351,6 +367,7 @@ def main(ip, puerto, mano):  # dirección IP, puerto, cantidad de cartas por man
     server.register_function(obten_puntaje)
     server.register_function(numero_rondas)
     server.register_function(opcion_3)
+    server.register_function(obten_partidas_ganadas)
     # Iniciando servidor
     print("\nIniciando servidor...\n")
     try:

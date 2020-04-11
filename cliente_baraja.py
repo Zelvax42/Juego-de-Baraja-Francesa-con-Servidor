@@ -124,15 +124,23 @@ def mostrar_jugadores(lista_jugadores):
         i += 1
 
 
-def mostrar_marcador(lista_jugadores):
+def mostrar_marcador(lista_jugadores,proxy):
     '''
         Imprime los jugadores que han jugado, y las veces que han ganado. Además de la ronda en la que están.
     '''
     veces_ganadas = 0  # Esto es de mentira, se debe de hacer algo para obtener las veces ganadas de cada jugador.
     print("== MARCADOR ==\n")
 
-    for jugador in lista_jugadores:
-        print("Jugador:", jugador, "(" + str(veces_ganadas) + " partidas ganadas).")
+    dict_marcadores, rondas = proxy.obten_partidas_ganadas()
+
+    for nombre_jugador, partidas_ganadas in dict_marcadores.items():
+        print(f"Jugador: {nombre_jugador} {partidas_ganadas} partidas ganadas")
+
+    return rondas
+
+    """for jugador in lista_jugadores:
+        marcador = proxy.obten_partidas_ganadas(jugador)
+        print("Jugador:", jugador, "(" + str(marcador) + " partidas ganadas).")"""
 
 
 def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos, dicc_puntos):
@@ -205,8 +213,10 @@ def main(jugador, ip, puerto):
 
                 if len(lista_nombres_jugadores) > 0:
                     mostrar_jugadores(lista_nombres_jugadores)
+                    time.sleep(2.0)
                 else:
                     print("Aún no se han agregado jugadores. Intenta agregar algunos.")
+                    time.sleep(2.0)
 
             elif opcion == 3:
                 lista = proxy.obten_mano_todos()
@@ -214,7 +224,8 @@ def main(jugador, ip, puerto):
                 lista_cartas_todos = lista[1]
                 #i = proxy.numero_rondas(i)
                 if len(lista_nombres_jugadores) > 1:
-                    lista_dos = proxy.obten_puntaje()
+                    print("A")
+                    lista_dos, i = proxy.obten_puntaje()
                     dicc_puntos = lista_dos[0]
                     lista_empatados = lista_dos[1]
                     mostrar_manos_todos(
@@ -245,10 +256,20 @@ def main(jugador, ip, puerto):
                         lista_nombres_jugadores = lista[0]
                         lista_cartas_todos = lista[1]
                         time.sleep(3.0)
-                        print("\n")
                         if len(lista_nombres_jugadores) > 1:
+                            print("A")
+                            lista_dos, i = proxy.obten_puntaje()
+                            dicc_puntos = lista_dos[0]
+                            lista_empatados = lista_dos[1]
                             mostrar_manos_todos(
-                                lista_nombres_jugadores, lista_cartas_todos)
+                                lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+                            if len(lista_empatados) > 1:
+                                # hay varios empatados
+                                print("Los empatados son:")
+                                for j in lista_empatados:
+                                    print(j)
+                            else:
+                                print("Ganó", lista_empatados[0])
                         else:
                             print(
                                 "No hay suficientes jugadores en la partida. Intenta agregar más de uno.")
@@ -263,9 +284,9 @@ def main(jugador, ip, puerto):
             elif opcion == 5:
                 lista_nombres_jugadores = proxy.mostrar_jugadores()
 
-                if len(lista_nombres_jugadores) > 0 and (jugado == True):
-                    mostrar_marcador(lista_nombres_jugadores)
+                if len(lista_nombres_jugadores) > 0:
 
+                    i = mostrar_marcador(lista_nombres_jugadores,proxy)
                     print("Ronda: ", i)
                 else:
                     print(
