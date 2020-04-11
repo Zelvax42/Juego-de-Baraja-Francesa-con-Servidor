@@ -224,7 +224,7 @@ def main(jugador, ip, puerto):
                 lista_cartas_todos = lista[1]
                 #i = proxy.numero_rondas(i)
                 if len(lista_nombres_jugadores) > 1:
-                    print("A")
+                    #print("A")
                     lista_dos, i = proxy.obten_puntaje()
                     dicc_puntos = lista_dos[0]
                     lista_empatados = lista_dos[1]
@@ -257,7 +257,7 @@ def main(jugador, ip, puerto):
                         lista_cartas_todos = lista[1]
                         time.sleep(3.0)
                         if len(lista_nombres_jugadores) > 1:
-                            print("A")
+                            #print("A")
                             lista_dos, i = proxy.obten_puntaje()
                             dicc_puntos = lista_dos[0]
                             lista_empatados = lista_dos[1]
