@@ -28,12 +28,13 @@ def mostrar_bienvenida(jugador, ip, puerto):
     print("Puerto: ", puerto)
 
 
+
 def despliega_menu():
     print("--------------------------\n")
     print("** MENU **\n")
     print("1.- Pedir mano.")
     print("2.- Mostrar jugadores.")
-    print("3.- Mostrar manos de todos.")
+    print("3.- Mostrar manos de todos. (¡JUGAR!)")
     print("4.- Volver a jugar.")
     print("5.- Mostrar marcador (ver el estado del juego).")
     print("6.- Preguntas frecuentemente preguntadas. <-- ¡IMPORTANTE!")
@@ -60,22 +61,25 @@ def faq():
 
     print("\n¿Qué hace la opción '3'?")
     print("     Muestra la mano de los 'juegadores'.\n"
-     + "        Teóricamente aquí se decide quién gana.")
+     +    "Teóricamente aquí se decide quién gana.               ̿̿ ̿̿ ̿̿ ̿'̿'\̵͇̿̿\з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿")
     
     print("\n¿Qué hace la opción '4'?")
-    print("     Reinicia el juego. Limpia las manos. Devuelve las cartas.\n"
-        + "Para lograr esto, es necesario haber terminado una partida o haber pulsado '3'.")
+    print("     Reinicia el juego. Devuelve cartas. Reinicia manos.\n"
+        + "Para lograr esto, es necesario haber terminado una partida o haber pulsado '3'."
+        + "Se necesita haber jugado al menos una vez.")
 
     print("\n¿Qué hace la opción '5'?")
     print("     Este es el marcador de la partida.\n"
-     + "        Muestra a los jugadores y sus victorias.")
+     +    "Muestra a los jugadores y sus victorias. (｡◕‿‿◕｡)")
 
     print("\n¿Qué hace la opción '6'?")
-    print("     Abre un FAQ, estás dentro.\n")
+    print("     Abre un FAQ, estás dentro. ಠ_ಠ \n")
 
     print("\n¿Qué hace la opción '0'?")
     print("     Te saca de la partida.\n"
-     + "        Manda un mensaje al servidor de tu salida. Se devuelven tus cartas a la baraja.\n")
+     +    "Manda un mensaje al servidor de tu salida. Se devuelven tus cartas a la baraja.\n")
+
+    print("( ͡° ͜ʖ ͡°)/´")
 
     salir = input("Presiona ENTER para salir.")
 
@@ -83,7 +87,7 @@ def mostrar_mano(jugador, mano):
     '''
         muestra la mano de un jugador
         recibe: nombre del jugador, uso: "Emilio"
-        recibe: diccionario de cartas del jugador, uso: mano
+        recibe: lista de cartas del jugador, uso: mano
     '''
     
     print("===========================")
@@ -125,7 +129,7 @@ def mostrar_marcador(lista_jugadores):
         print("Jugador:", jugador, "(" + str(veces_ganadas) + " partidas ganadas).")
     
 
-def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos):
+def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos, dicc_puntos):
     '''
         imprime las manos de todos los jugadores y dice quien ganó
         recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
@@ -134,12 +138,30 @@ def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos):
     if len(lista_nombres_jugadores) > 0:
         for jugador, mano in zip(lista_nombres_jugadores, lista_cartas_todos):
             mostrar_mano(jugador, mano)
+            mostrar_puntaje(dicc_puntos, jugador)
             print("\n")
 
         # función chila que diga quién ganó aki
     else:
         print("No existen jugadores dentro de la partida. Intenta agregar algunos.")
 
+
+def mostrar_puntaje(dicc_puntos, jugador):
+    '''
+        John Romero was here, was he?
+        he ded
+        tho
+    '''
+    for nombre_jugador, lista in dicc_puntos.items():
+        if jugador == nombre_jugador:
+            pares = lista[0]
+            tercias = lista[1]
+            puntuacion = lista[2]
+            print("- Pares:",pares)
+            print("- Tercias:", tercias)
+            print("- Puntaje:", puntuacion)
+    
+    
 
 def main(jugador, ip, puerto):
     print("\n== JUEGO DE BARAJA FRANCESA (ahora con servidor)==\n")
@@ -156,17 +178,23 @@ def main(jugador, ip, puerto):
         mano = []
         lista_nombres_jugadores = []
         lista_cartas_todos = []
-        rondas = 0
+        i = 0
+
         while opcion != 0:
             opcion = despliega_menu()
             print("\n")
             if opcion == 1:
-                mano = proxy.genera_mano(jugador)
-                tiene_mano = True
-                if mano != 0:
-                    mostrar_mano(jugador, mano)
+                if (tiene_mano == False):
+                    mano = proxy.genera_mano(jugador)
+                    tiene_mano = True
+                    if mano != 0:
+                        mostrar_mano(jugador, mano)
+                    else:
+                        print("No es posible dar más cartas.")
                 else:
-                    print("No es posible dar más cartas.")
+                    mostrar_mano(jugador, mano)
+                    print("AVISO: ¡Ya tienes mano! No puedes cambiar de mano.\n")
+                    
             elif opcion == 2:
                 lista_nombres_jugadores = proxy.mostrar_jugadores()
 
@@ -179,15 +207,28 @@ def main(jugador, ip, puerto):
                 lista = proxy.obten_mano_todos()
                 lista_nombres_jugadores = lista[0]
                 lista_cartas_todos = lista[1]
-                
-                if len(lista_nombres_jugadores) > 1:
-                    mostrar_manos_todos(
-                    lista_nombres_jugadores, lista_cartas_todos)
-                    jugado = True
-                    rondas += 1
+                i = proxy.numero_rondas(i)
+                #if len(lista_nombres_jugadores) > 1:
+                lista_dos = proxy.obten_puntaje()
+                dicc_puntos = lista_dos[0]
+                set_empatados = lista_dos[1]
+                print(type(set_empatados))
+                mostrar_manos_todos(
+                lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+                if set_empatados > 0:
+                    # hay varios empatados
+                    print("Los empatados son:")
+                    for jugador in set_empatados:
+                        print(jugador)
                 else:
-                    print("No hay suficientes jugadores en la partida."
-                    + "Intenta agregar más de 1.")
+                    for jugador in set_empatados:
+                        print("Ganó el pendejete este:", jugador)
+                #mostrar_opcion_3(dicc_puntos, jugador, mano)
+                jugado = True
+                
+                # else:
+                #     print("No hay suficientes jugadores en la partida."
+                #     + " Intenta agregar más de 1.")
 
             elif opcion == 4:
                 if jugado == True:
@@ -198,6 +239,9 @@ def main(jugador, ip, puerto):
                         print("¡Nueva mano!")
                         mostrar_mano(jugador,mano)
                         print("\nCalculando las manos de los jugadores oponentes...")
+                        lista = proxy.obten_mano_todos()
+                        lista_nombres_jugadores = lista[0]
+                        lista_cartas_todos = lista[1]
                         time.sleep(3.0)
                         print("\n")
                         if len(lista_nombres_jugadores) > 1:
@@ -218,9 +262,11 @@ def main(jugador, ip, puerto):
 
                 if len(lista_nombres_jugadores) > 0 and (jugado == True):
                     mostrar_marcador(lista_nombres_jugadores)
+                    
+                    print("Ronda: ", i)
                 else:
                     print("No hay suficientes jugadores o bien, no se ha jugado una partida aún.")
-                print("\nRondas jugadas:", rondas, "\n")
+                
                 
             elif opcion == 6:
                 faq()
@@ -237,9 +283,9 @@ def main(jugador, ip, puerto):
             proxy.salir(jugador)
         print(str(jugador) + ", haz salido de la partida.")
 
-    except:
-        print(str(jugador) + ", has salido de la partida. Tu mano ha sido devuelta a la baraja.\n"
-            + "Gracias por 'JUEGAR'.\n")
+    #except:
+    #    print(str(jugador) + ", has salido de la partida. Tu mano ha sido devuelta a la baraja.\n"
+    #        + "Gracias por 'JUEGAR'.\n")
 
 
 if __name__ == "__main__":
