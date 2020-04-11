@@ -208,27 +208,25 @@ def main(jugador, ip, puerto):
                 lista_nombres_jugadores = lista[0]
                 lista_cartas_todos = lista[1]
                 i = proxy.numero_rondas(i)
-                #if len(lista_nombres_jugadores) > 1:
-                lista_dos = proxy.obten_puntaje()
-                dicc_puntos = lista_dos[0]
-                set_empatados = lista_dos[1]
-                print(type(set_empatados))
-                mostrar_manos_todos(
-                lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
-                if set_empatados > 0:
-                    # hay varios empatados
-                    print("Los empatados son:")
-                    for jugador in set_empatados:
-                        print(jugador)
-                else:
-                    for jugador in set_empatados:
-                        print("Ganó el pendejete este:", jugador)
+                if len(lista_nombres_jugadores) > 1:
+                    lista_dos = proxy.obten_puntaje()
+                    dicc_puntos = lista_dos[0]
+                    lista_empatados = lista_dos[1]
+                    mostrar_manos_todos(
+                    lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+                    if len(lista_empatados) > 1:
+                        # hay varios empatados
+                        print("Los empatados son:")
+                        for jugador in lista_empatados:
+                            print(jugador)
+                    else:
+                        print("Ganó", lista_empatados[0])
                 #mostrar_opcion_3(dicc_puntos, jugador, mano)
                 jugado = True
                 
-                # else:
-                #     print("No hay suficientes jugadores en la partida."
-                #     + " Intenta agregar más de 1.")
+                else:
+                    print("No hay suficientes jugadores en la partida."
+                    + " Intenta agregar más de 1.")
 
             elif opcion == 4:
                 if jugado == True:
