@@ -158,14 +158,18 @@ class Baraja:
         '''
         lista_nueva = list()
         dicc_jugadores = dict()
+        dicc = dict()
 
         for jugador in self.lista_jugadores:
             jugador.ordena_mano()
+            jugador.puntuacion = 0
 
+            lista_nueva.clear()
+            dicc.clear()
             # Convertimos la mano en una lista nueva de solo números.
             for carta in jugador.mano:
                 lista_nueva.append(carta.valor)
-            #JAJAJAJAJAJAJAJA
+
             # Contamos el número de cartas repetidas y se guardan en un diccionario
             dicc = {i:lista_nueva.count(i) for i in lista_nueva} #Muchas gracias al Octavio no? que me paso esta cosa un saludaxo
             pares = 0
