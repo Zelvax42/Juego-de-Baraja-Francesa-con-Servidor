@@ -66,7 +66,9 @@ def faq():
     print("\n¿Qué hace la opción '4'?")
     print("     Reinicia el juego. Devuelve cartas. Reinicia manos.\n"
           + "Para lograr esto, es necesario haber terminado una partida o haber pulsado '3'."
-          + "Se necesita haber jugado al menos una vez.")
+          + "Se necesita haber jugado al menos una vez."
+          + "Se optó por hacer que se reiniciara la mano del jugador que presiona '4', en lugar de"
+          + "hacer que todos reinicien su baraja. Por el bien de que todos estén de acuerdo de en volver a jugar.")
 
     print("\n¿Qué hace la opción '5'?")
     print("     Este es el marcador de la partida.\n"
