@@ -62,6 +62,7 @@ class Baraja:
     figuras = None
     lista_cartas = None
     lista_jugadores = None
+    rondas = None
 
     def __init__(self):
         # El método Genera_lista_cartas() debe de hacer la lista de 52 cartas
@@ -84,6 +85,7 @@ class Baraja:
         self.figuras = ["C", "P", "T", "D"]
         self.lista_cartas = genera_lista_cartas()
         self.lista_jugadores = []
+        self.rondas = 0
 
     def genera_mano(self, num_cartas, nombre_jugador):
         '''
