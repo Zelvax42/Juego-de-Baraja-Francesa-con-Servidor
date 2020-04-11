@@ -283,7 +283,7 @@ def definir_ganador(dicc_puntos):
                     jugador_pasado = copy.copy(jugador_actual)
             else:
                 # gana el actual
-                print("Ganó el pasado: 263")
+                print("Ganó el actual: 263")
                 print(nombre_actual)
                 nombre_pasado = copy.copy(nombre_jugador)
                 jugador_pasado = copy.copy(jugador_actual)
