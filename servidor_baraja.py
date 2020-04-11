@@ -239,6 +239,19 @@ def definir_ganador(dicc_puntos):
             if tercias_pasado > 0 and tercias_actual == 0:
                 # gana el pasado
                 pass
+            elif (tercias_pasado == tercias_actual) and tercias_pasado != 0:
+                # desempate de puntos
+                if puntuacion_pasado > puntuacion_actual:
+                    # gana pasado
+                    pass
+                elif puntuacion_pasado == puntuacion_actual:
+                    # empate
+                    set_empatados = empate(
+                        set_empatados, nombre_pasado, nombre_actual, puntuacion_pasado, puntuacion_actual)
+                else:
+                    # gana actual
+                    nombre_pasado = copy.copy(nombre_jugador)
+                    jugador_pasado = copy.copy(jugador_actual)
             elif tercias_pasado == 0 and tercias_actual == 0:
                 # no tienen tercias, posiblemente pares
                 if pares_pasado > 0 and pares_actual == 0:
