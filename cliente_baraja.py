@@ -72,14 +72,16 @@ def faq():
 
     print("\n¿Qué hace la opción '5'?")
     print("     Este es el marcador de la partida.\n"
-          + "Muestra a los jugadores y sus victorias. (｡◕‿‿◕｡)")
+          + "Muestra a los jugadores y sus victorias. (｡◕‿‿◕｡)"
+          + "Además muestra la ronda en la que se encuentran: siendo la suma de todas las victorias y empates de la partida.")
 
     print("\n¿Qué hace la opción '6'?")
     print("     Abre un FAQ, estás dentro. ಠ_ಠ \n")
 
     print("\n¿Qué hace la opción '0'?")
     print("     Te saca de la partida.\n"
-          + "Manda un mensaje al servidor de tu salida. Se devuelven tus cartas a la baraja.\n")
+          + "Manda un mensaje al servidor de tu salida. Se devuelven tus cartas a la baraja.\n"
+          + "Si entras otra vez, se te da una colección nueva de cartas.")
 
     print("( ͡° ͜ʖ ͡°)/´")
 
