@@ -198,8 +198,11 @@ def obten_puntaje():
     lista = [dicc_puntos, l]
 
     new_rondas = numero_rondas()
+    lista_ganadores = []
+    for jugador in tarjetas.calcula_ganador(baraja):
+        lista_ganadores.append(jugador.nombre)
 
-    return lista, new_rondas
+    return lista, new_rondas, lista_ganadores
 
 def obten_partidas_ganadas():
     baraja = leer_pkl()[0]
