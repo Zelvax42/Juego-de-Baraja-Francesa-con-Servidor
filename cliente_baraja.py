@@ -33,7 +33,7 @@ def despliega_menu():
     print("** MENU **\n")
     print("1.- Pedir mano.")
     print("2.- Mostrar jugadores.")
-    print("3.- Mostrar manos de todos. (¡JUGAR!)")
+    print("3.- Verificar quién gana. (¡JUGAR!)")
     print("4.- Volver a jugar.")
     print("5.- Mostrar marcador (ver el estado del juego).")
     print("6.- Preguntas frecuentemente preguntadas. <-- ¡IMPORTANTE!")
@@ -60,8 +60,8 @@ def faq():
           + "        Es necesario haber pedido cartas para aparecer aquí.")
 
     print("\n¿Qué hace la opción '3'?")
-    print("     Muestra la mano de los 'juegadores'.\n"
-          + "Teóricamente aquí se decide quién gana.               ̿̿ ̿̿ ̿̿ ̿'̿'\̵͇̿̿\з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿")
+    print("     Dice quién de los 'juegadores' gana.\n"
+          + "       ̿̿ ̿̿ ̿̿ ̿'̿'\̵͇̿̿\з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿")
 
     print("\n¿Qué hace la opción '4'?")
     print("     Reinicia el juego. Devuelve cartas. Reinicia manos.\n"
@@ -96,7 +96,7 @@ def mostrar_mano(jugador, mano):
     print("===========================")
     print(str(jugador) + ", tu mano es: \n")
     ordena_mano(mano)
-    print("===========================\n")
+    
 
 
 def ordena_mano(mano):
@@ -151,9 +151,11 @@ def mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos, dicc_puntos
         recibe: una lista de nombres de jugadores (str), uso: lista_jugadores
         recibe: una lista de las cartas de todos (Carta), uso: lista_cartas_todos
     '''
+    
     if len(lista_nombres_jugadores) > 0:
         for jugador, mano in zip(lista_nombres_jugadores, lista_cartas_todos):
             mostrar_mano(jugador, mano)
+            print("\n")
             mostrar_puntaje(dicc_puntos, jugador)
             print("\n")
 
@@ -168,11 +170,12 @@ def mostrar_puntaje(dicc_puntos, jugador):
         he ded
         tho
     '''
-    for nombre_jugador, lista in dicc_puntos.items():
-        if jugador == nombre_jugador:
-            pares = lista[0]
-            tercias = lista[1]
-            puntuacion = lista[2]
+    diccionario_puntos = dicc_puntos[0]
+    for nombre_jugador, puntajes in diccionario_puntos.items():
+        if nombre_jugador == jugador:
+            pares = puntajes[0]
+            tercias = puntajes[1]
+            puntuacion = puntajes[2]
             print("- Pares:", pares)
             print("- Tercias:", tercias)
             print("- Puntaje:", puntuacion)
@@ -225,22 +228,27 @@ def main(jugador, ip, puerto):
                 lista_nombres_jugadores = lista[0]
                 lista_cartas_todos = lista[1]
                 #i = proxy.numero_rondas(i)
+                
                 if len(lista_nombres_jugadores) > 1:
-                    #print("A")
                     lista_dos = proxy.obten_puntaje()
                     dicc_puntos = lista_dos[0]
                     new_rondas = lista_dos[1] # ???
                     lista_empatados = lista_dos[2]
-                    #mostrar_manos_todos(
-                    #    lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+
+                    print("Manos de todos los jugadores: ")
+                    mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+                    print("===========================")
+
                     if len(lista_empatados) > 1:
                         # hay varios empatados
                         print("Los empatados son:")
                         for j in lista_empatados:
                             print(j)
                     else:
-                        print("Ganó", lista_empatados[0])
-                    #mostrar_opcion_3(dicc_puntos, jugador, mano)
+                       
+                        print("\nGanó:", lista_empatados[0], "con: \n")
+                        mostrar_puntaje(dicc_puntos, lista_empatados[0])
+                
                     jugado = True
                 else:
                     print("No hay suficientes jugadores en la partida."
@@ -254,25 +262,26 @@ def main(jugador, ip, puerto):
                         tiene_mano = True
                         print("¡Nueva mano!")
                         mostrar_mano(jugador, mano)
-                        print("\nCalculando las manos de los jugadores oponentes...")
+
                         lista = proxy.obten_mano_todos()
                         lista_nombres_jugadores = lista[0]
                         lista_cartas_todos = lista[1]
                         time.sleep(3.0)
+
                         if len(lista_nombres_jugadores) > 1:
-                            #print("A")
+
                             lista_dos, i = proxy.obten_puntaje()
                             dicc_puntos = lista_dos[0]
                             lista_empatados = lista_dos[1]
-                            mostrar_manos_todos(
-                                lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+                            mostrar_manos_todos(lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+
                             if len(lista_empatados) > 1:
                                 # hay varios empatados
                                 print("Los empatados son:")
                                 for j in lista_empatados:
                                     print(j)
                             else:
-                                print("Ganó", lista_empatados[0])
+                                print("Ganó:", lista_empatados[0])
                         else:
                             print(
                                 "No hay suficientes jugadores en la partida. Intenta agregar más de uno.")
