@@ -14,12 +14,16 @@ class Jugador:
     mano = None
     puntuacion = None
     ganadas_jeje = None
+    pares = None
+    tercias = None
 
     def __init__(self, nombre, baraja):
         self.nombre = nombre
         self.mano = []
         self.puntuacion = 0
         self.ganadas_jeje = 0
+        self.pares = 0
+        self.tercias = 0
         baraja.guarda_jugador(self)
 
     def despliega_mano(self, baraja):
@@ -184,18 +188,23 @@ class Baraja:
             dicc = {i: lista_nueva.count(i) for i in lista_nueva}
             pares = 0
             tercias = 0
+            jugador.pares = pares
+            jugador.tercias = tercias
 
             for valor_carta, repetidos in dicc.items():
                 if repetidos == 2:  # Es par.
                     pares += 1
+                    jugador.pares = pares
                     jugador.puntuacion += valor_carta*repetidos
 
                 elif repetidos == 4:  # Son dos pares.
                     pares += 2
+                    jugador.pares = pares
                     jugador.puntuacion += valor_carta*repetidos
 
                 elif repetidos == 3:  # Es tercia.
                     tercias += 1
+                    jugador.tercias = tercias
                     jugador.puntuacion += valor_carta*repetidos
 
             dicc_jugadores[jugador.nombre] = [
@@ -260,20 +269,6 @@ def genera_jugador(jugador, baraja):
     nombre = Jugador(jugador, baraja)
 
 
-def leer_pkl():  # test
-    '''
-        Lee un archivo .pkl y devuelve una lista de objetos
-        regresa: lista[0] = baraja
-                 lista[1] = mano (tamaño de mano)
-    '''
-    try:
-        lista = pickle.load(open("pickle.pkl", "rb"))
-    except:
-        print("No se pudo leer el archivo solicitado. \n"
-              "Intenta hacer una reinserción del mismo.")
-    return lista
-
-
 def calcula_ganador(baraja):
     '''
         Calcula el ganador del juego
@@ -292,52 +287,86 @@ def calcula_ganador(baraja):
         for jugador in lista_jugadores:
             jugadores_pares.append(jugador)
 
-    if (len(baraja.dicc_tercias) == 1 and 0 not in baraja.dicc_tercias.keys()) or len(baraja.dicc_tercias) > 1:
-        # hay ganador(es) con tercia
-        return desempate(baraja, jugadores_tercias)
-    if (len(baraja.dicc_pares) == 1 and 0 not in baraja.dicc_pares.keys()) or len(baraja.dicc_pares) > 1:
-        # hay ganador(es) con pares
-        return desempate(baraja, jugadores_pares)
+    for key in baraja.dicc_tercias:
+        num_tercias = key
+        for k in baraja.dicc_pares:
+            num_pares = k
+            break
+        break
+
+    if num_tercias >= num_pares and num_tercias > 0:
+        if (len(baraja.dicc_tercias) == 1 and 0 not in baraja.dicc_tercias.keys()) or len(baraja.dicc_tercias) > 1:
+            # hay ganador(es) con tercia
+            return desempate(baraja, jugadores_tercias, tercias=True)
     else:
-        # todos empataron
-        #lista_empates = sorted(baraja.lista_jugadores,
-        #                       key=lambda j: j.puntuacion, reverse=True)
-        return desempate(baraja, jugadores_tercias)
+        if (len(baraja.dicc_pares) == 1 and 0 not in baraja.dicc_pares.keys()) or len(baraja.dicc_pares) > 1:
+            # hay ganador(es) con pares
+            return desempate(baraja, jugadores_pares, pares=True)
+        else:
+            # todos empataron
+            # lista_empates = sorted(baraja.lista_jugadores,
+            #                       key=lambda j: j.puntuacion, reverse=True)
+            # return desempate(baraja, jugadores_tercias, puntuacion=True, stop=True)
+            return baraja.lista_jugadores
 
 
-def desempate(baraja, lista_empates):
+def desempate(baraja, lista_empates, **kwargs):
     '''
-        Desempata a los jugadores de acuerdo a su puntuación
+        Desempata a los jugadores
         Recibe: objeto baraja
         Recibe: lista de empatadores
+        Recibe: tercias=True, si se desea calcular tercias, pares si pares, puntuacion..., brk romper la recursión
         Regresa: lista de desempates
         Solo regresa los que hayan ganado en 1er lugar
     '''
-    #if len(lista_empates) > 1: # hay empates
-    # ordenamos la lista de forma descendente de acuerdo a su puntuación
-    lista_jugadores = sorted(
-        baraja.lista_jugadores, key=lambda j: j.puntuacion, reverse=True)
+    # if len(lista_empates) > 1: # hay empates
+
+    if "tercias" in kwargs:
+        # ordenamos la lista de forma descendente de acuerdo a sus tercias
+        lista_jugadores = sorted(
+            baraja.lista_jugadores, key=lambda j: j.tercias, reverse=True)
+        atributo = "tercias"
+    elif "pares" in kwargs:
+        # ordenamos la lista de forma descendente de acuerdo a sus pares
+        lista_jugadores = sorted(
+            baraja.lista_jugadores, key=lambda j: j.pares, reverse=True)
+        atributo = "pares"
+    elif "puntuacion" in kwargs:
+        # ordenamos la lista de forma descendente de acuerdo a su puntuación
+        lista_jugadores = sorted(
+            baraja.lista_jugadores, key=lambda j: j.puntuacion, reverse=True)
+        atributo = "puntuacion"
+
     num_mayor = 0
     primera_vez = True
     lista_desempates = []
 
+    if "brk" in kwargs:
+        s = "j.nombre"
+    else:
+        s = "j"
+
     for jugador in lista_jugadores:
-        for nombre_jugador in lista_empates:
-            if nombre_jugador == jugador.nombre:
+        for j in lista_empates:
+            if eval(s) == jugador.nombre:
                 # encontramos al jugador
                 if primera_vez:
                     # primera iteración
-                    num_mayor = jugador.puntuacion
+                    num_mayor = getattr(jugador, atributo)
                     lista_desempates.append(jugador)
                     primera_vez = False
-                elif num_mayor == jugador.puntuacion:
+                elif num_mayor == getattr(jugador, atributo):
                     # si están ordenados, y num_mayor es mayor que al siguiente jugador, automaticamente ganó el primero
                     lista_desempates.append(jugador)
                 else:
-                    return lista_desempates
-
-    return lista_desempates
-
+                    if "brk" in kwargs or len(lista_desempates) == 1:
+                        return lista_desempates
+                    else:
+                        return desempate(baraja, lista_desempates, puntuacion=True, brk=True)
+    if "brk" in kwargs or len(lista_desempates) == 1:
+        return lista_desempates
+    else:
+        return desempate(baraja, lista_desempates, puntuacion=True, brk=True)
 
 
 def encuentra_jugadores(baraja, lista_jugadores):
@@ -350,7 +379,21 @@ def encuentra_jugadores(baraja, lista_jugadores):
     return lista
 
 
+def leer_pkl():  # test
+    '''
+        Lee un archivo .pkl y devuelve una lista de objetos
+        regresa: lista[0] = baraja
+                 lista[1] = mano (tamaño de mano)
+    '''
+    try:
+        lista = pickle.load(open("pickle.pkl", "rb"))
+    except:
+        print("No se pudo leer el archivo solicitado. \n"
+              "Intenta hacer una reinserción del mismo.")
+    return lista
+
+
 # baraja = leer_pkl()[0]
 # lista_ganadores = calcula_ganador(baraja)
 # for jugador in lista_ganadores:
-#    print(jugador.nombre)
+#     print(jugador.nombre)
