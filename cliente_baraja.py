@@ -34,7 +34,7 @@ def despliega_menu():
     print("1.- Pedir mano.")
     print("2.- Mostrar jugadores.")
     print("3.- Verificar quién gana. (¡JUGAR!)")
-    print("4.- Volver a jugar.")
+    print("4.- Volver a jugar (pedir cartas otra vez).")
     print("5.- Mostrar marcador (ver el estado del juego).")
     print("6.- Preguntas frecuentemente preguntadas. <-- ¡IMPORTANTE!")
     print("0.- Salir.")
@@ -68,7 +68,7 @@ def faq():
           + "Para lograr esto, es necesario haber terminado una partida o haber pulsado '3'."
           + "Se necesita haber jugado al menos una vez."
           + "Se optó por hacer que se reiniciara la mano del jugador que presiona '4', en lugar de"
-          + "hacer que todos reinicien su baraja. Por el bien de que todos estén de acuerdo de en volver a jugar.")
+          + "hacer que todos reinicien su baraja. Por el bien de que todos estén de acuerdo en volver a jugar.")
 
     print("\n¿Qué hace la opción '5'?")
     print("     Este es el marcador de la partida.\n"
@@ -228,8 +228,8 @@ def main(jugador, ip, puerto):
                 lista_nombres_jugadores = lista[0]
                 lista_cartas_todos = lista[1]
                 #i = proxy.numero_rondas(i)
-                
                 if len(lista_nombres_jugadores) > 1:
+
                     lista_dos = proxy.obten_puntaje()
                     dicc_puntos = lista_dos[0]
                     new_rondas = lista_dos[1] # ???
@@ -307,9 +307,10 @@ def main(jugador, ip, puerto):
             elif opcion == 6:
                 faq()
 
-        #if tiene_mano == True:  # ya tienes una mano
-        #    proxy.salir(jugador)
-        print("\n¡Gracias por jugar!\n")
+        if tiene_mano == True:  # ya tienes una mano
+            proxy.salir(jugador)
+        else:
+            print("\n¡Gracias por jugar!\n")
 
     except ConnectionError:
         print("Ha habido un error de conexión con el servidor.\n")
