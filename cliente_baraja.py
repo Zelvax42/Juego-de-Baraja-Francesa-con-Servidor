@@ -224,6 +224,8 @@ def main(jugador, ip, puerto):
                     time.sleep(2.0)
 
             elif opcion == 3:
+
+                #La función/método que determina quién ganó pasó a tarjetas.py.
                 lista = proxy.obten_mano_todos()
                 lista_nombres_jugadores = lista[0]
                 lista_cartas_todos = lista[1]
@@ -266,7 +268,6 @@ def main(jugador, ip, puerto):
                         lista = proxy.obten_mano_todos()
                         lista_nombres_jugadores = lista[0]
                         lista_cartas_todos = lista[1]
-                        time.sleep(3.0)
 
                         if len(lista_nombres_jugadores) > 1:
 
