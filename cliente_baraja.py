@@ -227,11 +227,12 @@ def main(jugador, ip, puerto):
                 #i = proxy.numero_rondas(i)
                 if len(lista_nombres_jugadores) > 1:
                     #print("A")
-                    lista_dos, i = proxy.obten_puntaje()
+                    lista_dos = proxy.obten_puntaje()
                     dicc_puntos = lista_dos[0]
-                    lista_empatados = lista_dos[1]
-                    mostrar_manos_todos(
-                        lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
+                    new_rondas = lista_dos[1] # ???
+                    lista_empatados = lista_dos[2]
+                    #mostrar_manos_todos(
+                    #    lista_nombres_jugadores, lista_cartas_todos, dicc_puntos)
                     if len(lista_empatados) > 1:
                         # hay varios empatados
                         print("Los empatados son:")
@@ -316,10 +317,13 @@ def main(jugador, ip, puerto):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-j', '--jugador', dest='jugador',
-                        help="Nombre del Jugador", required=True)
-    # parser.add_argument('-j', '--jugador', dest='jugador',
-    #                    help="Nombre del Jugador", required=False, default="TEST")  # SOLO DEBUG
+    test = True
+    if test == False:
+        parser.add_argument('-j', '--jugador', dest='jugador',
+                            help="Nombre del Jugador", required=True)
+    else:
+        parser.add_argument('-j', '--jugador', dest='jugador',
+                            help="Nombre del Jugador", required=False, default="TEST")  # SOLO DEBUG
     parser.add_argument('-d', '--direccion', dest='direccion',
                         help="Dirección IP", required=False, default="localhost")
     parser.add_argument('-p', '--puerto', dest='puerto',
